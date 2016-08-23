@@ -20,6 +20,7 @@ public:
     void output(T value)
     {
         print(value);
+        cout << endl;
     }
 
     template <typename T, size_t S>
