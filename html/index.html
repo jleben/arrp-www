@@ -1,0 +1,54 @@
+<h1>Arrp Playground</h1>
+
+
+<div style="max-width:500px">
+<p>
+Enter code into the top text area.
+
+Press "Run".
+
+If the code compiles successfully, the first 10 samples of output will be printed in the area below.
+Otherwise, errors will be printed in that area.
+</p>
+<div>
+
+<textarea id="arrp-input" cols="50" rows="10">
+</textarea>
+</p>
+
+<p>
+<button onclick="sendArrpInput()">Run</button>
+</p>
+
+<p>
+<textarea id="arrp-output" cols="50" rows="10">
+</textarea>
+</p>
+
+<script>
+
+var arrp_server_url = "http://localhost/arrp-www/"
+
+function sendArrpInput() {
+
+  var text = document.getElementById("arrp-input").value;
+
+  var data = new Blob([text], {type: 'text/plain'});
+
+  var xmlhttp = new XMLHttpRequest();
+
+  xmlhttp.onreadystatechange = function() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+          processArrpResponse(xmlhttp.responseText);
+      }
+  };
+  xmlhttp.open("POST", arrp_server_url + "cgi/arrp-code-post.sh", true);
+  xmlhttp.send(data);
+}
+
+function processArrpResponse(text) {
+    console.log("Reponse:\n" + text);
+    document.getElementById("arrp-output").value = text;
+}
+
+</script>
