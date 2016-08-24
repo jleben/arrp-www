@@ -17,15 +17,7 @@ fi
 
 # Lock
 
-#../local/lock
-
-if [[ -n $(which lockfile-create) ]]; then
-    lockfile-create --lock-name request.lock --retry 1 || exit 1
-elif [[ -n $(which lockfile) ]]; then
-    lockfile -r 1 request.lock || exit 1
-else
-    exit 1
-fi
+../config/lock_requests || exit 1
 
 # Process request
 
@@ -34,5 +26,4 @@ bash "../cgi/arrp-code-post.sh" "../"
 
 #Unlock
 
-#../local/unlock
-rm -f request.lock
+../config/unlock_requests
