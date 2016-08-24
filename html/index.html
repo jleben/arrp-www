@@ -2,26 +2,41 @@
 
 
 <div style="max-width:500px">
-<p>
-Enter code into the top text area.
-
-Press "Run".
-
-If the code compiles successfully, the first 10 samples of output will be printed in the area below.
+<ul>
+<li>Enter code into the top text area.</li>
+<li>Enter the desired number of output samples to compute.</li>
+<li>Press "Run".</li>
+<li>
+If the code compiles successfully, the desired amount of output samples will be printed in the bottom text area.
 Otherwise, errors will be printed in that area.
+</li>
 </p>
 <div>
 
+<p>Arrp Code:</p>
+<p>
 <textarea id="arrp-input" cols="50" rows="10">
+fib = [~:
+  0 -> 0;
+  1 -> 1;
+  i -> fib[i-1] + fib[i-2];
+];
+
+main = fib
 </textarea>
+</p>
+
+<p>
+Number of output samples: <input id="out-count" type="text" value="10">
 </p>
 
 <p>
 <button onclick="sendArrpInput()">Run</button>
 </p>
 
+<p>Output:</p>
 <p>
-<textarea id="arrp-output" cols="50" rows="10">
+<textarea readonly id="arrp-output" cols="50" rows="10">
 </textarea>
 </p>
 
@@ -35,6 +50,8 @@ function sendArrpInput() {
 
   var data = new Blob([text], {type: 'text/plain'});
 
+  var out_count = document.getElementById("out-count").value;
+
   var xmlhttp = new XMLHttpRequest();
 
   xmlhttp.onreadystatechange = function() {
@@ -42,8 +59,9 @@ function sendArrpInput() {
           processArrpResponse(xmlhttp.responseText);
       }
   };
-  xmlhttp.open("POST", arrp_server_url + "cgi/arrp-code-post.sh", true);
+  xmlhttp.open("POST", arrp_server_url + "cgi/arrp-code-post.sh" + "?out_count=" + out_count, true);
   xmlhttp.send(data);
+  document.getElementById("arrp-output").value = "Computing...";
 }
 
 function processArrpResponse(text) {
