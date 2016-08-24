@@ -9,7 +9,7 @@
 #mkdir $request_dir && \
 #cd $request_dir
 
-cd ../requests
+cd ../../requests
 
 if [ $? != 0 ]; then
   exit 1

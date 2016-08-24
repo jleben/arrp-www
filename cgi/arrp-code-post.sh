@@ -1,6 +1,6 @@
 #!/bin/bash
 
-root_dir=../../
+root_dir=$1
 
 function get_query_value {
   param=$1
@@ -24,9 +24,7 @@ echo
 
 tee > code.arrp
 
-cat ../../local/msg 2>&1
-
-$root_dir/arrp/arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
+$root_dir/config/arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
 
 if [ $? != 0 ]
 then
