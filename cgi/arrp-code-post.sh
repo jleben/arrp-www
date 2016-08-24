@@ -3,10 +3,27 @@
 cd ../requests
 root_dir="../"
 
+function get_query_value {
+  param=$1
+  pattern="$param=([^?]+)"
+  if [[ "$QUERY_STRING" =~ $pattern ]]; then
+    query_value=${BASH_REMATCH[1]}
+  else
+    query_value=""
+  fi
+}
+
+get_query_value out_count
+output_count=$query_value
+
+tee > code.arrp
+
 echo "Content-type: text/plain"
 echo
 
-tee > code.arrp
+#echo "query: $QUERY_STRING"
+#echo "out count: $output_count"
+#exit 0
 
 $root_dir/arrp/arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
 
@@ -24,7 +41,7 @@ then
   exit 0
 fi
 
-./program > output.log 2> errors.log
+./program $output_count > output.log 2> errors.log
 
 if [ $? != 0 ]
 then
