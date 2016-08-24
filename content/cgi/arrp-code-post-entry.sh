@@ -17,6 +17,8 @@ fi
 
 # Lock
 
+#../local/lock
+
 if [[ -n $(which lockfile-create) ]]; then
     lockfile-create --lock-name request.lock --retry 1 || exit 1
 elif [[ -n $(which lockfile) ]]; then
@@ -32,4 +34,5 @@ bash "../cgi/arrp-code-post.sh" "../"
 
 #Unlock
 
+#../local/unlock
 rm -f request.lock
