@@ -71,7 +71,7 @@ function sendArrpInput() {
           processArrpResponse(xmlhttp.responseText);
       }
   };
-  xmlhttp.open("POST", arrp_server_url + "cgi/arrp-code-post.sh" + "?out_count=" + out_count, true);
+  xmlhttp.open("POST", arrp_server_url + "cgi/arrp-code-post-entry.sh" + "?out_count=" + out_count, true);
   xmlhttp.send(data);
   document.getElementById("arrp-output").value = "Computing...";
 }

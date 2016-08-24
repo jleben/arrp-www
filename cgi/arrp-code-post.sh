@@ -1,7 +1,6 @@
 #!/bin/bash
 
-cd ../requests
-root_dir="../"
+root_dir=$1
 
 function get_query_value {
   param=$1
@@ -16,14 +15,14 @@ function get_query_value {
 get_query_value out_count
 output_count=$query_value
 
-tee > code.arrp
+#echo "query: $QUERY_STRING"
+#echo "out count: $output_count"
+#exit 0
 
 echo "Content-type: text/plain"
 echo
 
-#echo "query: $QUERY_STRING"
-#echo "out count: $output_count"
-#exit 0
+tee > code.arrp
 
 $root_dir/arrp/arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
 
@@ -41,7 +40,7 @@ then
   exit 0
 fi
 
-./program $output_count > output.log 2> errors.log
+./program "$output_count" > output.log 2> errors.log
 
 if [ $? != 0 ]
 then
