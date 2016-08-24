@@ -7,10 +7,20 @@ namespace arrp_www {
 
 class generic_printer
 {
+    int m_output_count = 10;
+
 public:
+    generic_printer(int output_count): m_output_count(output_count) {}
+
+    int remaining_output_count() { return m_output_count; }
+
     template <typename T, size_t S>
     void output(T (&a)[S])
     {
+        if (m_output_count < 1)
+            return;
+        --m_output_count;
+
         using namespace std;
         print(a);
         cout << endl;
@@ -19,6 +29,10 @@ public:
     template <typename T>
     void output(T value)
     {
+        if (m_output_count < 1)
+            return;
+        --m_output_count;
+
         print(value);
         cout << endl;
     }
