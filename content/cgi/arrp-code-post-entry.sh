@@ -9,6 +9,10 @@
 #mkdir $request_dir && \
 #cd $request_dir
 
+PATH=""
+
+source ../../config/config.sh
+
 cd ../../requests
 
 if [ $? != 0 ]; then

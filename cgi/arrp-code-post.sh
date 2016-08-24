@@ -24,7 +24,7 @@ echo
 
 tee > code.arrp
 
-$root_dir/config/arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
+arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
 
 if [ $? != 0 ]
 then
