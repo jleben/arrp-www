@@ -1,6 +1,6 @@
 <h1>Arrp Playground</h1>
 
-
+<!--
 <div style="max-width:500px">
 <ul>
 <li>Enter code into the top text area.</li>
@@ -12,10 +12,13 @@ Otherwise, errors will be printed in that area.
 </li>
 </p>
 <div>
+-->
 
-<p>Arrp Code:</p>
+<p>Arrp code:</p>
 <p>
 <textarea id="arrp-input" cols="50" rows="10" maxlength="5000">
+## Edit me!
+
 fib = [~:
   0 -> 0;
   1 -> 1;
@@ -27,12 +30,11 @@ main = fib
 </p>
 
 <p>
-Number of output samples: <input id="out-count" type="text" value="10">
+<button onclick="sendArrpInput()">Run</button>
+<input id="out-count" type="text" value="10" size="4" maxlength="4" style="text-align: right">
+samples
 </p>
 
-<p>
-<button onclick="sendArrpInput()">Run</button>
-</p>
 
 <p>Output:</p>
 <p>
@@ -71,7 +73,7 @@ function sendArrpInput() {
   };
   xmlhttp.open("POST", "../cgi/arrp-code-post-entry.sh" + "?out_count=" + out_count, true);
   xmlhttp.send(data);
-  document.getElementById("arrp-output").value = "Computing...";
+  document.getElementById("arrp-output").value = "Waiting for response...";
 }
 
 function processArrpResponse(text) {
