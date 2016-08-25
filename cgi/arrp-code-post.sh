@@ -24,6 +24,14 @@ echo
 
 tee > code.arrp
 
+code_size=$(stat -c%s code.arrp)
+code_size_limit=10000
+
+if [[ $code_size -gt $code_size_limit ]]; then
+  echo "Error: code size is limited to $code_size_limit bytes."
+  exit 0
+fi
+
 arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
 
 if [ $? != 0 ]
