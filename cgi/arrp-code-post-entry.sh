@@ -11,9 +11,9 @@
 
 PATH=""
 
-source ../../config/config.sh
+source ../config/config.sh
 
-cd ../../requests
+cd ../requests
 
 if [ $? != 0 ]; then
   exit 1
