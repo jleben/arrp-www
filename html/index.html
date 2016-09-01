@@ -71,7 +71,7 @@ function sendArrpInput() {
           processArrpResponse(xmlhttp.responseText);
       }
   };
-  xmlhttp.open("POST", "../cgi/arrp-code-post-entry.sh" + "?out_count=" + out_count, true);
+  xmlhttp.open("POST", "/arrp/play/post" + "?out_count=" + out_count, true);
   xmlhttp.send(data);
   document.getElementById("arrp-output").value = "Waiting for response...";
 }
