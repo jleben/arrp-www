@@ -11,6 +11,13 @@
 
 PATH=""
 
+if [[ "$REQUEST_METHOD" != "POST" ]]; then
+  echo "Content-type: text/plain"
+  echo
+  echo "Please use the POST method to post some Arrp code."
+  exit 0
+fi
+
 source ../config/config.sh
 
 cd ../requests
