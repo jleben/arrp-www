@@ -1,0 +1,16 @@
+
+ScriptAliasMatch "{{url-prefix}}/play/post$" "{{file-prefix}}/cgi/arrp-code-post-entry.sh"
+
+AliasMatch "{{url-prefix}}/play$" "{{file-prefix}}/html/index.html"
+
+<Directory "{{file-prefix}}/html">
+  Require all granted
+</Directory>
+
+<Directory "{{file-prefix}}/cgi">
+  Require all granted
+
+  <Files "arrp-code-post-entry.sh">
+    LimitRequestBody 10000
+  </Files>
+</Directory>
