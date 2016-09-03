@@ -1,4 +1,35 @@
 
+window.onload = function() { selectExample() };
+
+var examples = {
+  fibonacci:
+`## Edit me!
+
+fib = [
+  0 -> 0;
+  1 -> 1;
+  i -> fib[i-1] + fib[i-2];
+];
+
+main = fib`,
+
+  triangle:
+`## Edit me!
+
+sawtooth = [i -> (i % 10) / 10];
+
+triangle = 1 - abs(2 * sawtooth - 1);
+
+main = triangle`
+};
+
+function selectExample() {
+  var key = document.getElementById("example-selection").value;
+  var code = examples[key];
+  //console.log("selected example = " + key);
+  document.getElementById("arrp-input").value = code;
+}
+
 function sendArrpInput(post_url) {
 
   var text = document.getElementById("arrp-input").value;

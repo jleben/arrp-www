@@ -21,20 +21,17 @@ block content
 
   h2 Try Arrp:
 
-  p: textarea(id='arrp-input' rows='10' maxlength='5000').
-    ## Edit me!
+  select(id='example-selection' onchange='selectExample()')
+      option(value='fibonacci') Fibbonacci sequence
+      option(value='triangle') Triangle wave
 
-    fib = [
-      0 -> 0;
-      1 -> 1;
-      i -> fib[i-1] + fib[i-2];
-    ];
+  button(onclick='selectExample()') Reload
 
-    main = fib
+  p: textarea(id='arrp-input' rows='10' maxlength='5000')
 
   p
     button(onclick='sendArrpInput("'+base_url+'/play/post")') Run
-    input(id='out-count' type='text' value='10' size='4' maxlength='4' style='text-align: right')
+    input(id='out-count' type='text' value='50' size='4' maxlength='4' style='text-align: right')
     | samples
 
   p Output:
