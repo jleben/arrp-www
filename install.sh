@@ -22,7 +22,7 @@ mkdir -p "$dest/css"
 cp "css/style.css" "$dest/css"
 
 mkdir -p "$dest/html"
-pug pug/play.pug pug/reference.pug -O "{base_url: '/arrp'}" --out "$dest/html"
+pug pug/pages -O "{base_url: '/arrp'}" --out "$dest/html"
 
 mkdir -p "$dest/apache"
 
