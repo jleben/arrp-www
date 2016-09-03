@@ -15,8 +15,14 @@ mkdir -p "$dest/cgi"
 cp "cgi/arrp-code-post.sh" "$dest/cgi"
 cp "cgi/arrp-code-post-entry.sh" "$dest/cgi"
 
+mkdir -p "$dest/js"
+cp "js/play.js" "$dest/js"
+
+mkdir -p "$dest/css"
+cp "css/style.css" "$dest/css"
+
 mkdir -p "$dest/html"
-cp "html/index.html" "$dest/html"
+pug pug/play.pug pug/reference.pug -O "{base_url: '/arrp'}" --out "$dest/html"
 
 mkdir -p "$dest/apache"
 

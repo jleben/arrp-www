@@ -1,50 +1,5 @@
-<h1>Arrp Playground</h1>
 
-<!--
-<div style="max-width:500px">
-<ul>
-<li>Enter code into the top text area.</li>
-<li>Enter the desired number of output samples to compute.</li>
-<li>Press "Run".</li>
-<li>
-If the code compiles successfully, the desired amount of output samples will be printed in the bottom text area.
-Otherwise, errors will be printed in that area.
-</li>
-</p>
-<div>
--->
-
-<p>Arrp code:</p>
-<p>
-<textarea id="arrp-input" cols="50" rows="10" maxlength="5000">
-## Edit me!
-
-fib = [
-  0 -> 0;
-  1 -> 1;
-  i -> fib[i-1] + fib[i-2];
-];
-
-main = fib
-</textarea>
-</p>
-
-<p>
-<button onclick="sendArrpInput()">Run</button>
-<input id="out-count" type="text" value="10" size="4" maxlength="4" style="text-align: right">
-samples
-</p>
-
-
-<p>Output:</p>
-<p>
-<textarea readonly id="arrp-output" cols="50" rows="10">
-</textarea>
-</p>
-
-<script>
-
-function sendArrpInput() {
+function sendArrpInput(post_url) {
 
   var text = document.getElementById("arrp-input").value;
 
@@ -71,7 +26,7 @@ function sendArrpInput() {
           processArrpResponse(xmlhttp.responseText);
       }
   };
-  xmlhttp.open("POST", "/arrp/play/post" + "?out_count=" + out_count, true);
+  xmlhttp.open("POST", post_url + "?out_count=" + out_count, true);
   xmlhttp.send(data);
   document.getElementById("arrp-output").value = "Waiting for response...";
 }
@@ -80,5 +35,3 @@ function processArrpResponse(text) {
     console.log("Reponse:\n" + text);
     document.getElementById("arrp-output").value = text;
 }
-
-</script>

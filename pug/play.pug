@@ -1,0 +1,41 @@
+extends main.pug
+
+block content
+  script(src=base_url+'/js/play.js')
+
+  p(class='bigger').
+    Arrp is a functional language for digital signal processing
+    with the following features:
+  ul
+    li.
+      Signals regarded simply as multi-dimensional arrays with an infinite dimension.
+    li.
+      Pointwise operations and broadcasting.
+    li.
+      Polymorphic and higher order functions.
+    li.
+      Type inference.
+    li.
+      High performance for real-time DSP.
+
+
+  p Try Arrp right here:
+
+  p: textarea(id='arrp-input' rows='10' maxlength='5000').
+    ## Edit me!
+
+    fib = [
+      0 -> 0;
+      1 -> 1;
+      i -> fib[i-1] + fib[i-2];
+    ];
+
+    main = fib
+
+  p
+    button(onclick='sendArrpInput("'+base_url+'/play/post")') Run
+    input(id='out-count' type='text' value='10' size='4' maxlength='4' style='text-align: right')
+    | samples
+
+  p Output:
+  p: textarea(readonly id='arrp-output' rows='10')

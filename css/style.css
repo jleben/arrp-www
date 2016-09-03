@@ -1,0 +1,57 @@
+
+body { margin: 0px }
+
+#header { background-color: #000066; padding: 10px }
+
+#header-content {
+  max-width: 800px;
+  width: 100%;
+  margin: auto;
+}
+
+#header {
+  font-family: monospace;
+  font-size: 24; color: #ffffff
+}
+
+#header #menu-intro {
+  display: inline;
+}
+
+#header #menu-outro {
+  display: inline;
+  float: right;
+}
+
+#header #menu {
+  display: inline;
+  padding: 10px;
+  font-size: 20;
+  list-style-type: none;
+}
+
+#header #menu li { display: inline; margin: 10px }
+#header #menu li a { text-decoration: none; color: #ccccff }
+
+#page {
+  padding: 10px;
+}
+
+#page-content {
+  max-width: 800px;
+  width: 100%;
+  margin: auto;
+  font-size: 12pt;
+}
+
+#arrp-input {
+  width: 100%;
+}
+
+#arrp-output {
+  width: 100%;
+}
+
+.bigger {
+  font-size: 14pt;
+}
