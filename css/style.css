@@ -44,6 +44,10 @@ body { margin: 0px }
   font-size: 12pt;
 }
 
+#page-content h1 { font-size: 20pt; color: #000066 }
+#page-content h2 { font-size: 14pt; color: #000066 }
+
+
 #arrp-input {
   width: 100%;
 }
