@@ -1,0 +1,210 @@
+extends ../../main.pug
+
+block content
+  h1 Notation
+
+  p.
+    The syntax of Arrp is specified in this document in the EBNF notation,
+    as #[a(href='https://www.w3.org/TR/REC-xml/#sec-notation') defined by W3C].
+  p.
+    In addition:
+  ul
+    li "[ text ]" is equivalent to "( text )?"
+    li "{ text }" is equivalent to "( text )*"
+  p.
+    Rules are separated by empty lines.
+  p.
+    Any number of spaces, tab characters and line breaks
+    are allowed before or after any symbol or literal, except
+    within the rules for the symbols "id", "int", and "real".
+
+  h1 Module
+
+  p.
+    A unit of compilation is called a module:
+
+  pre.
+      module = [ module-decl ] [ imports ] [ bindings ]
+
+      module-decl = "module" module-name ";"
+
+      module-name = id
+
+  p.
+    A module consists of an optional declaration of its name,
+    an optional set of other imported modules, and a set of name bindings:
+
+  pre.
+      module example;
+
+      import lib1;
+      import lib2;
+
+      main = lib1.alpha + lib2.beta;
+
+  p.
+    This module is named "example", it imports code from two other modules
+    name "lib1" and "lib2", and has a name "main" bound to the expression
+    #[code lib1.alpha + lib2.beta].
+
+  h2 Default module name
+
+  p.
+    If a module does not declare its name, it gets the default name "m".
+
+  h2 The "main" expression
+
+  p.
+    The main module being compiled must contain an expression named "main".
+    This expression represents the entire program.
+
+  h1 Imports
+
+  p.
+    An import declaration makes names bound in the imported module
+    available in the current module.
+
+  a(name="imports")
+
+  pre(name="imports").
+    imports = { import-decl }
+
+    import-decl = "import" module-name [ "as" module-alias ] ";"
+
+    module-alias = id
+
+  h2 Location of imported module
+
+  p.
+     The imported module must reside in a file named "module-name.arrp".
+     The file must either be adjacent to the location of the current module,
+     or in one of the import directories given as an option to the compiler.
+
+  h2 Accessing imported names using qualified identifiers
+
+  p.
+    The names in the imported module are available using qualified identifiers.
+
+  pre.
+    qualified-id = qualifier "." id
+
+    qualifier = module-name | module-alias
+
+  p.
+    The required qualifier is the name of the imported module,
+    unless an alias was specified, in which case the qualifer is the alias.
+
+  h1 Global bindings
+
+  p.
+    Bindings bind names to expressions.
+
+  pre.
+    bindings = binding { ";" binding }  [ ";" ]
+
+    binding = id [ "(" [ param-list ] ")" ] "=" expr
+
+    param-list = id { "," id }
+
+  p.
+    If no parameters are given, the bound name represents the value of
+    the bound expression.
+  p.
+    If any parameters are given, the name represents a polymorphic function.
+    The function can be called with arguments of any type consistent with
+    the expression of the function.
+
+  h1 Local bindings and lambda functions
+
+  pre.
+      expr += let-expr | where-expr | func-lambda
+
+      let-expr =
+        "let" binding "in" expr
+        |
+        "let" "{" bindings "}" "in" expr
+
+      where-expr =
+          expr "where" binding
+          |
+          expr "where" "{" bindings "}"
+
+      func-lambda = "\" param-list "->" expr
+
+  h1 Function application
+
+  pre.
+      expr +=  | func-application
+
+      func-application = expr "(" expr-list ")"
+
+      expr-list = expr { "," expr }
+
+
+  h1 Literal values
+
+  pre.
+    expr += int | real | boolean
+
+    int = [0-9]+
+
+    real = [0-9]+ "." [0-9]+
+
+    boolean = "true" | "false"
+
+  h1 Built-in operations
+
+  pre.
+    expr += unary-op expr | expr binary-op expr
+
+    unary-op = "!" | "-"
+
+    binary-op =
+        "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" |
+        "+" | "-" | "*" | "/" | "//" | "%" | "^"
+
+  ul
+    li "!", "||", "&&" - Boolean negation, disjunction and conjunction.
+    li "==", "!=" - Equivalence and Inequivalence (boolean or numerical).
+    li "<", "<=", ">", ">=" - Numerical comparison.
+    li.
+      "+", "-", "*", "/", "//" - Arithmetic.
+      "/" is always a floating point division, and "//" is always an integer division.
+    li "%" Remainder.
+    li "^" Exponentiation.
+
+
+  h1 Built-in functions
+
+  h2 Math
+
+  pre.
+    exp, exp2, log, log2, log10,
+    sqrt, sin, cos, tan, asin, acos, atan,
+    ceil, floor, abs, min, max
+
+  h2 Complex numbers
+
+  p Accessing real and imaginary part of a complex number:
+
+  pre real, imag
+
+  h2 Type conversion
+
+  pre real32, real64, complex32, complex64.
+
+  h1 Identifiers
+
+  pre.
+    expr += id | qualified-id
+
+    id = [a-zA-Z] [a-zA-Z_0-9]*
+
+  An identifier in an expression refers to a name
+  of an expression, function argument,
+  or array index, whichever is found in the innermost enclosing scope.
+
+  represents the value of the expression bound to
+  the name
+
+  h1 Arrays
