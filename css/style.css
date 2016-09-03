@@ -62,3 +62,7 @@ body { margin: 0px }
   font-family: 'Share Tech', sans-serif;
   font-size: 16pt;
 }
+
+.citation p {
+  margin: 2px;
+}
