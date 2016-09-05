@@ -1,17 +1,17 @@
 
-module = [ module-decl ] [ imports ] [ bindings ]
+module = module-decl?  imports? bindings?
 
 module-decl = "module" id ";"
 
-imports = { import-decl }
+imports = import-decl*
 
-import-decl = "import" id [ "as" id ] ";"
+import-decl = "import" id ( "as" id )? ";"
 
-bindings = binding { ";" binding }  [ ";" ]
+bindings = binding ( ";" binding )*  ";"?
 
-binding = id [ "(" [ param-list ] ")" ] "=" expr
+binding = id ( "(" param-list ")" )? "=" expr
 
-param-list = id { "," id }
+param-list = id ( "," id )*
 
 expr =
     id
@@ -61,28 +61,28 @@ lambda =
 
 func-application = expr "(" expr-list ")"
 
-array-func = "[" [ array-ranges ":" ] array-patterns "]"
+array-func = "[" ( array-ranges ":" )? array-patterns "]"
 
 array-ranges = array-range { "," array-range }
 
 array-range = expr | "~"
 
-array-patterns = array-pattern { ";" array-pattern } [ ";" ]
+array-patterns = array-pattern ( ";" array-pattern )*  ";"?
 
 array-pattern =
     array-pattern-vars "->" expr
     |
     array-pattern-vars array-domains
 
-array-pattern-vars = array-pattern-var { "," array-pattern-var }
+array-pattern-vars = array-pattern-var ( "," array-pattern-var )*
 
 array-pattern-var = id | int
 
-array-domains = { array-domain } "|" expr
+array-domains = ( array-domain )* "|" expr
 
 array-domain = "|" expr "->" expr
 
-array-enum = "[" array-enum-elem { ";" array-enum-elem }  "]"
+array-enum = "[" array-enum-elem ( ";" array-enum-elem )*  "]"
 
 array-enum-elem = expr
 
@@ -90,7 +90,7 @@ array-application = array-app-object "[" expr-list "]"
 
 array-app-object = expr | "this"
 
-array-size = "#" array-size-object [ "@" array-size-dim ]
+array-size = "#" array-size-object ( "@" array-size-dim )?
 
 array-size-object = expr
 
@@ -106,9 +106,9 @@ where-expr =
     |
     expr "where" "{" bindings "}"
 
-expr-list = expr { "," expr }
+expr-list = expr ( "," expr )*
 
-id = [a-zA-Z] [a-zA-Z_0-9]*
+id = [a-zA-Z] [a-zA-Z0-9_]*
 
 qualified-id = id "." id
 
@@ -118,6 +118,6 @@ int = [0-9]+
 
 real = [0-9]+ "." [0-9]+
 
-complex = [0-9]+ [ "." [0-9]+ ] "i"
+complex = [0-9]+ ( "." [0-9]+ )? "i"
 
 boolean = "true" | "false"

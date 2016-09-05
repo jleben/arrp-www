@@ -24,7 +24,7 @@ def main():
 
   space_pat = re.compile("[ ]*")
   def_pat = re.compile("([a-zA-Z-]+)\\s*=")
-  ref_pat = re.compile("[^\"\\w]([a-zA-Z-]+)[^\"\\w]")
+  ref_pat = re.compile("\"[^\"]*\"|\\[[^\\]]*\\]|([a-zA-Z-]+)")
 
   out_file.write("pre.\n")
 
@@ -44,6 +44,9 @@ def main():
       pos = match.end()
 
     for match in ref_pat.finditer(line, pos):
+      print "Ref match: " + match.group(0)
+      if not match.group(1):
+        continue;
       name = match.group(1)
       print "Found ref: " + str(name) + " {}:{}".format(match.start(1), match.end(1))
       #replacement = "<a href=\"#" + name + "\">" + name + "</a>"

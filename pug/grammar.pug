@@ -1,18 +1,18 @@
 pre.
   
-  #[a(name='module') module] = [ #[a(href='#module-decl') module-decl] ] [ #[a(href='#imports') imports] ] [ #[a(href='#bindings') bindings] ]
+  #[a(name='module') module] = #[a(href='#module-decl') module-decl]?  #[a(href='#imports') imports]? #[a(href='#bindings') bindings]?
   
   #[a(name='module-decl') module-decl] = "module" #[a(href='#id') id] ";"
   
-  #[a(name='imports') imports] = { #[a(href='#import-decl') import-decl] }
+  #[a(name='imports') imports] = #[a(href='#import-decl') import-decl]*
   
-  #[a(name='import-decl') import-decl] = "import" #[a(href='#id') id] [ "as" #[a(href='#id') id] ] ";"
+  #[a(name='import-decl') import-decl] = "import" #[a(href='#id') id] ( "as" #[a(href='#id') id] )? ";"
   
-  #[a(name='bindings') bindings] = #[a(href='#binding') binding] { ";" #[a(href='#binding') binding] }  [ ";" ]
+  #[a(name='bindings') bindings] = #[a(href='#binding') binding] ( ";" #[a(href='#binding') binding] )*  ";"?
   
-  #[a(name='binding') binding] = #[a(href='#id') id] [ "(" [ #[a(href='#param-list') param-list] ] ")" ] "=" #[a(href='#expr') expr]
+  #[a(name='binding') binding] = #[a(href='#id') id] ( "(" #[a(href='#param-list') param-list] ")" )? "=" #[a(href='#expr') expr]
   
-  #[a(name='param-list') param-list] = #[a(href='#id') id] { "," #[a(href='#id') id] }
+  #[a(name='param-list') param-list] = #[a(href='#id') id] ( "," #[a(href='#id') id] )*
   
   #[a(name='expr') expr] =
       #[a(href='#id') id]
@@ -21,9 +21,9 @@ pre.
       |
       #[a(href='#literal') literal]
       |
-      #[a(href='#unary-op') unary-op] expr
+      #[a(href='#unary-op') unary-op] #[a(href='#expr') expr]
       |
-      #[a(href='#expr') expr] binary-#[a(href='#op') op] expr
+      #[a(href='#expr') expr] #[a(href='#binary-op') binary-op] #[a(href='#expr') expr]
       |
       #[a(href='#conditional') conditional]
       |
@@ -62,28 +62,28 @@ pre.
   
   #[a(name='func-application') func-application] = #[a(href='#expr') expr] "(" #[a(href='#expr-list') expr-list] ")"
   
-  #[a(name='array-func') array-func] = "[" [ #[a(href='#array-ranges') array-ranges] ":" ] #[a(href='#array-patterns') array-patterns] "]"
+  #[a(name='array-func') array-func] = "[" ( #[a(href='#array-ranges') array-ranges] ":" )? #[a(href='#array-patterns') array-patterns] "]"
   
   #[a(name='array-ranges') array-ranges] = #[a(href='#array-range') array-range] { "," #[a(href='#array-range') array-range] }
   
   #[a(name='array-range') array-range] = #[a(href='#expr') expr] | "~"
   
-  #[a(name='array-patterns') array-patterns] = #[a(href='#array-pattern') array-pattern] { ";" #[a(href='#array-pattern') array-pattern] } [ ";" ]
+  #[a(name='array-patterns') array-patterns] = #[a(href='#array-pattern') array-pattern] ( ";" #[a(href='#array-pattern') array-pattern] )*  ";"?
   
   #[a(name='array-pattern') array-pattern] =
       #[a(href='#array-pattern-vars') array-pattern-vars] "->" #[a(href='#expr') expr]
       |
-      #[a(href='#array-pattern-vars') array-pattern-vars] array-#[a(href='#domains') domains]
+      #[a(href='#array-pattern-vars') array-pattern-vars] #[a(href='#array-domains') array-domains]
   
-  #[a(name='array-pattern-vars') array-pattern-vars] = #[a(href='#array-pattern-var') array-pattern-var] { "," #[a(href='#array-pattern-var') array-pattern-var] }
+  #[a(name='array-pattern-vars') array-pattern-vars] = #[a(href='#array-pattern-var') array-pattern-var] ( "," #[a(href='#array-pattern-var') array-pattern-var] )*
   
   #[a(name='array-pattern-var') array-pattern-var] = #[a(href='#id') id] | #[a(href='#int') int]
   
-  #[a(name='array-domains') array-domains] = { #[a(href='#array-domain') array-domain] } "|" #[a(href='#expr') expr]
+  #[a(name='array-domains') array-domains] = ( #[a(href='#array-domain') array-domain] )* "|" #[a(href='#expr') expr]
   
   #[a(name='array-domain') array-domain] = "|" #[a(href='#expr') expr] "->" #[a(href='#expr') expr]
   
-  #[a(name='array-enum') array-enum] = "[" #[a(href='#array-enum-elem') array-enum-elem] { ";" #[a(href='#array-enum-elem') array-enum-elem] }  "]"
+  #[a(name='array-enum') array-enum] = "[" #[a(href='#array-enum-elem') array-enum-elem] ( ";" #[a(href='#array-enum-elem') array-enum-elem] )*  "]"
   
   #[a(name='array-enum-elem') array-enum-elem] = #[a(href='#expr') expr]
   
@@ -91,7 +91,7 @@ pre.
   
   #[a(name='array-app-object') array-app-object] = #[a(href='#expr') expr] | "this"
   
-  #[a(name='array-size') array-size] = "#" #[a(href='#array-size-object') array-size-object] [ "@" #[a(href='#array-size-dim') array-size-dim] ]
+  #[a(name='array-size') array-size] = "#" #[a(href='#array-size-object') array-size-object] ( "@" #[a(href='#array-size-dim') array-size-dim] )?
   
   #[a(name='array-size-object') array-size-object] = #[a(href='#expr') expr]
   
@@ -107,9 +107,9 @@ pre.
       |
       #[a(href='#expr') expr] "where" "{" #[a(href='#bindings') bindings] "}"
   
-  #[a(name='expr-list') expr-list] = #[a(href='#expr') expr] { "," #[a(href='#expr') expr] }
+  #[a(name='expr-list') expr-list] = #[a(href='#expr') expr] ( "," #[a(href='#expr') expr] )*
   
-  #[a(name='id') id] = [#[a(href='#a-zA-Z') a-zA-Z]] [#[a(href='#a-zA') a-zA]-Z_0-9]*
+  #[a(name='id') id] = [a-zA-Z] [a-zA-Z0-9_]*
   
   #[a(name='qualified-id') qualified-id] = #[a(href='#id') id] "." #[a(href='#id') id]
   
@@ -119,6 +119,6 @@ pre.
   
   #[a(name='real') real] = [0-9]+ "." [0-9]+
   
-  #[a(name='complex') complex] = [0-9]+ [ "." [0-9]+ ] "i"
+  #[a(name='complex') complex] = [0-9]+ ( "." [0-9]+ )? "i"
   
   #[a(name='boolean') boolean] = "true" | "false"
