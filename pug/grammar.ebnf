@@ -18,11 +18,7 @@ expr =
     |
     qualified-id
     |
-    int
-    |
-    real
-    |
-    boolean
+    literal
     |
     unary-op expr
     |
@@ -51,16 +47,6 @@ expr =
     where-expr
     |
     id "=" expr
-
-id = [a-zA-Z] [a-zA-Z_0-9]*
-
-qualified-id = id "." id
-
-int = [0-9]+
-
-real = [0-9]+ "." [0-9]+
-
-boolean = "true" | "false"
 
 unary-op = "!" | "-"
 
@@ -121,3 +107,17 @@ where-expr =
     expr "where" "{" bindings "}"
 
 expr-list = expr { "," expr }
+
+id = [a-zA-Z] [a-zA-Z_0-9]*
+
+qualified-id = id "." id
+
+literal = int | real | complex | boolean
+
+int = [0-9]+
+
+real = [0-9]+ "." [0-9]+
+
+complex = [0-9]+ [ "." [0-9]+ ] "i"
+
+boolean = "true" | "false"

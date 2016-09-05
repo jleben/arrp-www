@@ -19,11 +19,7 @@ pre.
       |
       #[a(href='#qualified-id') qualified-id]
       |
-      #[a(href='#int') int]
-      |
-      #[a(href='#real') real]
-      |
-      #[a(href='#boolean') boolean]
+      #[a(href='#literal') literal]
       |
       #[a(href='#unary-op') unary-op] expr
       |
@@ -52,16 +48,6 @@ pre.
       #[a(href='#where-expr') where-expr]
       |
       #[a(href='#id') id] "=" #[a(href='#expr') expr]
-  
-  #[a(name='id') id] = [#[a(href='#a-zA-Z') a-zA-Z]] [#[a(href='#a-zA') a-zA]-Z_0-9]*
-  
-  #[a(name='qualified-id') qualified-id] = #[a(href='#id') id] "." #[a(href='#id') id]
-  
-  #[a(name='int') int] = [0-9]+
-  
-  #[a(name='real') real] = [0-9]+ "." [0-9]+
-  
-  #[a(name='boolean') boolean] = "true" | "false"
   
   #[a(name='unary-op') unary-op] = "!" | "-"
   
@@ -122,3 +108,17 @@ pre.
       #[a(href='#expr') expr] "where" "{" #[a(href='#bindings') bindings] "}"
   
   #[a(name='expr-list') expr-list] = #[a(href='#expr') expr] { "," #[a(href='#expr') expr] }
+  
+  #[a(name='id') id] = [#[a(href='#a-zA-Z') a-zA-Z]] [#[a(href='#a-zA') a-zA]-Z_0-9]*
+  
+  #[a(name='qualified-id') qualified-id] = #[a(href='#id') id] "." #[a(href='#id') id]
+  
+  #[a(name='literal') literal] = #[a(href='#int') int] | #[a(href='#real') real] | #[a(href='#complex') complex] | #[a(href='#boolean') boolean]
+  
+  #[a(name='int') int] = [0-9]+
+  
+  #[a(name='real') real] = [0-9]+ "." [0-9]+
+  
+  #[a(name='complex') complex] = [0-9]+ [ "." [0-9]+ ] "i"
+  
+  #[a(name='boolean') boolean] = "true" | "false"
