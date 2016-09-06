@@ -341,8 +341,10 @@ block content
   ul
     li #[code a] : Any type. Two occurences in the same row signify the same type.
     li #[code a : type] : The type "a" must be a particular type or type class "type"
-    li #[code arithmetic] : A class of types comprising: int, real32, real64.
-    li #[code numeric] : A class of types comprising: int, real32, real64, complex32, complex64.
+    li #[code real] : A type class comprising: real32, real64.
+    li #[code complex] : A type class comprising types: complex32, complex64.
+    li #[code simple-numeric] : A type class comprising: int, real.
+    li #[code numeric] : A type class comprising: int, real, complex.
 
   p.
     If the types of arguments do not satisfy the conditions, argument promotion is
@@ -354,7 +356,6 @@ block content
     The following type promotions are attempted:
 
   ul
-    li int &#8594 real32
     li int &#8594 real64
     li real32 &#8594 complex32
     li real64 &#8594 complex64
@@ -363,25 +364,25 @@ block content
 
   :markdown-it
 
-      expression          | result      | conditions          | comments
-      --------------------|-------------|---------------------|----------
-      `!bool`             | `bool`      |                     |
-      `bool || bool`      | `bool`      |                     |
-      `bool && bool`      | `bool`      |                     |
-      `bool && bool`      | `bool`      |                     |
-      `a == a`            | `bool`      |                     |
-      `a != a`            | `bool`      |                     |
-      `a < a`             | `bool`      | `a : arithmetic`    |
-      `a <= a`            | `bool`      | `a : arithmetic`    |
-      `a > a`             | `bool`      | `a : arithmetic`    |
-      `a >= a`            | `bool`      | `a : arithmetic`    |
-      `a + a`             | `bool`      | `a : numeric`       |
-      `a - a`             | `bool`      | `a : numeric`       |
-      `a * a`             | `bool`      | `a : numeric`       |
+      expression          | result      | conditions            | comments
+      --------------------|-------------|-----------------------|----------
+      `!bool`             | `bool`      |                       |
+      `bool || bool`      | `bool`      |                       |
+      `bool && bool`      | `bool`      |                       |
+      `bool && bool`      | `bool`      |                       |
+      `a == a`            | `bool`      |                       |
+      `a != a`            | `bool`      |                       |
+      `a < a`             | `bool`      | `a : simple-numeric`      |
+      `a <= a`            | `bool`      | `a : simple-numeric`      |
+      `a > a`             | `bool`      | `a : simple-numeric`      |
+      `a >= a`            | `bool`      | `a : simple-numeric`      |
+      `a + a`             | `bool`      | `a : numeric`         |
+      `a - a`             | `bool`      | `a : numeric`         |
+      `a * a`             | `bool`      | `a : numeric`         |
       `a / a`             | `bool`      | `a : real or complex` | Floating point or complex division.
-      `a // a`            | `bool`      | `a : arithmetic`      | Integer division.
+      `a // a`            | `bool`      | `a : simple-numeric`      | Integer division.
       `int % int`         | `int`       |                       | Remainder.
-      `a ^ a`             | `a`         | `a : arithmetic`      | Remainder.
+      `a ^ a`             | `a`         | `a : simple-numeric`      | Remainder.
 
 
   h2 Math functions
@@ -390,32 +391,34 @@ block content
 
       expression     | result      | conditions          | comments
       ---------------|-------------|---------------------|----------
-      `exp(a)`       | `a`          | `a : real or complex`  |
-      `exp2(a)`      | `a`          | `a : int or real`      |
-      `log(a)`       | `a`          | `a : real or complex`  |
-      `log2(a)`      | `a`          | `a : real`             |
-      `log10(a)`     | `a`          | `a : real or complex`  |
-      `sqrt(a)`      | `a`          | `a : real or complex`  |
-      `sin(a)`       | `a`          | `a : real or complex`  |
-      `cos(a)`       | `a`          | `a : real or complex`  |
-      `tan(a)`       | `a`          | `a : real or complex`  |
-      `asin(a)`      | `a`          | `a : real or complex`  |
-      `acos(a)`      | `a`          | `a : real or complex`  |
-      `atan(a)`      | `a`          | `a : real or complex`  |
-      `ceil(a)`      | `int`         | `a : int or real`      |
-      `floor(a)`     | `int`         | `a : int or real`      |
-      `abs(a)`       | `a`          | `a : int or real`      |
-      `min(a,a)`     | `a`          | `a : int or real`      |
-      `max(a,a)`     | `a`          | `a : int or real`      |
+      `exp(a)`       | `a`         | `a : real or complex`  |
+      `exp2(a)`      | `a`         | `a : int or real`      |
+      `log(a)`       | `a`         | `a : real or complex`  |
+      `log2(a)`      | `a`         | `a : real`             |
+      `log10(a)`     | `a`         | `a : real or complex`  |
+      `sqrt(a)`      | `a`         | `a : real or complex`  |
+      `sin(a)`       | `a`         | `a : real or complex`  |
+      `cos(a)`       | `a`         | `a : real or complex`  |
+      `tan(a)`       | `a`         | `a : real or complex`  |
+      `asin(a)`      | `a`         | `a : real or complex`  |
+      `acos(a)`      | `a`         | `a : real or complex`  |
+      `atan(a)`      | `a`         | `a : real or complex`  |
+      `ceil(a)`      | `a`         | `a : int or real`      |
+      `floor(a)`     | `a`         | `a : int or real`      |
+      `abs(a)`       | `a`         | `a : int or real`      |
+      `min(a,a)`     | `a`         | `a : int or real`      |
+      `max(a,a)`     | `a`         | `a : int or real`      |
 
   h2 Complex number functions
 
   :markdown-it
 
-      expression     | result      | conditions          | comments
-      ---------------|-------------|---------------------|----------
-      `real(a)`      | `real`      | `a : complex`       | Real part of complex number.
-      `imag(a)`      | `real`      | `a : complex`       | Imaginary part of complex number.
+      expression        | result      | conditions          | comments
+      ------------------|-------------|---------------------|----------
+      `real(complex32)` | `real32`    |                     | Real part of complex number.
+      `real(complex64)` | `real64`    |                     | Real part of complex number.
+      `imag(complex32)` | `real32`    |                     | Imaginary part of complex number.
+      `imag(complex64)` | `real64`    |                     | Imaginary part of complex number.
 
 
   h2 #[a(name='type-conversion') Type conversion functions]
@@ -424,9 +427,11 @@ block content
 
       expression     | result      | conditions          | comments
       ---------------|-------------|---------------------|----------
-      `real32(a)`    | `real32`    | `a : arithmetic`    |
-      `real64(a)`    | `real64`    | `a : arithmetic`    |
-      `complex32(a)` | `real64`    | `a : numeric`       |
+      `int(a)`       | `int`       | `a : simple-numeric`    |
+      `real32(a)`    | `real32`    | `a : simple-numeric`    |
+      `real64(a)`    | `real64`    | `a : simple-numeric`    |
+      `complex32(a)` | `complex32` | `a : numeric`       |
+      `complex64(a)` | `complex64` | `a : numeric`       |
 
 
   h1: a(name='broadcasting') Broadcasting
