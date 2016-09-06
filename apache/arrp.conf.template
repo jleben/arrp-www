@@ -4,6 +4,7 @@ ScriptAliasMatch "{{url-prefix}}/play/post$" "{{file-prefix}}/cgi/arrp-code-post
 Alias "{{url-prefix}}/css" "{{file-prefix}}/css"
 Alias "{{url-prefix}}/js" "{{file-prefix}}/js"
 AliasMatch "{{url-prefix}}/(.*)$" "{{file-prefix}}/html/$1.html"
+AliasMatch "{{url-prefix}}$" "{{file-prefix}}/html/play.html"
 
 <Directory "{{file-prefix}}/html">
   Require all granted
