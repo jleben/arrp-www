@@ -72,30 +72,33 @@ block content
 
   p See #[a(href=ref_grammar('bindings')) Grammar: bindings]
 
-  h2 Function application
+  p.
+    The scope of a global name is the expression to which it is bound,
+    and the expressions of the following global names.
 
-  p A function is applied when followed by arguments in parenthesis:
+  h2 Function application and polymorphism
+
+  p.
+    A function is applied when followed by arguments in parenthesis
+    (see #[a(href=ref_grammar('func-application')) Grammar: func-application]):
 
   pre.
     area_of_right_triangle(a, b) = a * b / 2;
 
     main = #[b area_of_right_triangle(10, 5)];
 
-  p See #[a(href=ref_grammar('func-application')) Grammar: func-application]
+  p.
+    Partial application is supported: a function applied to less
+    arguments than it has parameters results in another function
+    with the remaining parameters.
 
-  h2 Function polymorphism
+  // TODO: add example
 
   p.
     All functions are polymorphic: they can be applied to arguments of
     any type consistent with the expression of the function.
 
   // TODO: add example
-
-  h2 Scope of global names
-
-  p.
-    The scope of a global name is the expression to which it is bound,
-    and the expressions of the following global names.
 
   h2 Local name bindings
 
@@ -136,62 +139,352 @@ block content
 
   h1 Arrays
 
+  p.
+    Arrays are a special kind of functions that map integers
+    to values of some primitive type. Each formal parameter of such a function
+    also called a #[i dimension], and an actual parameter (argument) is
+    also called an #[i index]. A multi-parameter function is therefore a
+    multi-dimensional array.
 
+  p.
+    An array dimension ranges from 0 up to (and excluding) some number
+    called array size. However, the size of one dimension can be
+    infinite. Such an array is called a #[i signal].
 
-  h1 Literal primitive values
+  p.
+    We represent a sequence of indices or array sizes for
+    multiple dimensions with a tuple: #{'\<x,y,...\>'}.
+
+  h2 Array definition
+
+  p.
+    An array can be defined with an expression that specifies
+    the array size and a list of mappings from indices to values
+    (see #[a(href=ref_grammar('array-func')) Grammar: array-func]):
 
   pre.
-    int
+    a = [5,10:
+        x,0 -> 0;
+        x,y -> x/y;
+    ]
 
-    real
+  p.
+    This is a 2-dimensional array with size #{'<5,10>'},
+    and it maps all indices where the second dimension
+    equals 0 to the value 0, and all other indices of form #{'<x,y>'}
+    to the value x/y.
 
-    complex
+  h2 Signals
 
-    boolean
+  p.
+    A signal (an infinite array) is defined by using #[code ~] in place
+    of the array size:
 
-  p See #[a(href=ref_grammar('literal')) Grammar: literal]
+  pre.
+    s = [#[b ~],5: t -> sin(t*5)]
+
+  p.
+    Alternatively, an infinite array size is assumed when no size is given.
+    Mind that only a single infinite dimension is allowed:
+
+  pre.
+    s = [t -> sin(t)]
+
+  h2 Index patterns and guards
+
+  p.
+    Each index-value mapping begins with an #[i index pattern]
+    (see #[a(href=ref_grammar('index-mapping')) Grammar: index-mapping]).
+    Each pattern element is either a literal index value for
+    which the pattern is valid, or a name of a variable representing
+    any index value which can be used in the mapped expression.
+
+  p.
+    A mapping is only effective for indices not matched by
+    any pattern of the preceding mappings. Any index within the size
+    of the array must be matched by at least one pattern.
+
+  p.
+    An index mapping can be further split by #[i index guards]
+    (see #[a(href=ref_grammar('index-mapping')) Grammar: index-mapping]).
+    An index guard is a boolean expression on array index variables.
+    The mapped expression is effective only for indices where the
+    expression is true. Guarded expressions must be followed by an
+    expression without a guard that is effective for all indices
+    not matched by any guard.
+
+  p.
+    The following signal - defined using guards -
+    has every third element equal to 1, and all others equal to 0:
+
+  pre.
+    s = [t | t % 3 == 0 -> 1 | 0]
+
+  p.
+    A guarded mapping is only effective for indices matched by
+    its pattern, and not matched by guards and patterns of any
+    preceding mappings.
+
+  p.
+    An index guard must be a quasi-affine expression in index variables
+    and constant integers.
+    This means it can only contain:
+
+  ul
+    li Any constant integer expression.
+    li Addition and subtraction of constants and variables.
+    li Multiplication of a constant and a variable.
+    li Division and modulo of a variable with a constant divisor.
+
+  h2 Nested arrays
+
+  p.
+    Array definitions can be nested, resulting in an array with combined
+    dimensions:
+
+  pre.
+    a = [t -> [5: i -> sin(t*i)]]
+
+  p.
+    The array "a" is a 2-dimensional array with size #{'<t, 5>'}.
+
+  h2 Array application
+
+  p.
+    An array is applied when followed by indices in square brackets
+    (see #[a(href=ref_grammar('array-applciation')) Grammar: array-application]):
+
+  pre.
+    a = [5,10: x,y -> x+y];
+    b = <b>a[3,4]</b>;
+
+  p.
+    An array can be partially applied, just like an ordinary function, which
+    results in an array with the remaining dimensions:
+
+  pre.
+    a = [5,10: x,y -> x+y];
+    b = <b>a[3]</b>;
+
+  h2: a(name='recursive-arrays') Recursive arrays
+
+  p.
+    A recursive array is defined using the name bound to the
+    array expression inside the expression itself, or using the keyword
+    "this":
+
+  pre.
+    a = [0 -> 0; t -> a[t-1] * 0.8];
+    b = [0 -> 0; t -> this   * 0.8];
+
+  p.
+    Using local names, it is possible to define mutually recursive arrays:
+
+  pre.
+    a = [t -> b[t] + 1]
+      where b = [0 -> 0; t -> a[t-1] * 2]
+
+  h2 Array enumeration
+
+  p.
+    An array can be defined by listing values of each of its elements
+    (see #[a(href=ref_grammar('array-enum')) Grammar: array-enum]):
+
+  pre.
+    x = 100;
+    a = [4; x*3; [-1; -2]; x+2];
+
+  h2 Array concatenation
+
+  p.
+    Two arrays can be concatenated
+    (see #[a(href=ref_grammar('array-concat')) Grammar: array-concat]):
+
+  pre.
+    a = [0; 1] ++ [t -> a[t] * 2];
+
+  h1 Primitive values
+
+  p.
+    Arrp supports the following primitive types:
+
+  ul
+    li boolean
+    li int - 32bit signed integers
+    li real32 - 32bit floating points
+    li real64 - 64bit floating points
+    li complex32 - complex numbers with 32bit floating points for real and imaginary part
+    li complex64 - complex numbers with 64bit floating points for real and imaginary part
+
+  p.
+    Literal values can be created for the following types:
+    int64, real64, complex64, and boolean
+    (see #[a(href=ref_grammar('literal')) Grammar: literal]).
+
+  p.
+    An expression can be converted to other primitive types
+    (see #[a(href='#type-conversion') Type Conversion]).
 
   h1 Built-in operations and functions
 
-  h2 Unary and binary operators
+  p.
+    Built-in operations and functions operate on primitive types.
+    They can also be applied to arrays, via #[a(href='#broadcasting') broadcasting].
 
-  pre.
-    expr += unary-op expr | expr binary-op expr
+  p.
+    The following tables list relations between argument types
+    and result types, and additional conditions on argument
+    types.
 
-    unary-op = "!" | "-"
-
-    binary-op =
-        "||" | "&&" | "==" | "!=" | "<" | "<=" | ">" | ">=" |
-        "+" | "-" | "*" | "/" | "//" | "%" | "^"
+    In addition to type names, the following forms have special meanings:
 
   ul
-    li "!", "||", "&&" - Boolean negation, disjunction and conjunction.
-    li "==", "!=" - Equivalence and Inequivalence (boolean or numerical).
-    li "<", "<=", ">", ">=" - Numerical comparison.
-    li.
-      "+", "-", "*", "/", "//" - Arithmetic.
-      "/" is always a floating point division, and "//" is always an integer division.
-    li "%" Remainder.
-    li "^" Exponentiation.
+    li #[code a] : Any type. Two occurences in the same row signify the same type.
+    li #[code a : type] : The type "a" must be a particular type or type class "type"
+    li #[code arithmetic] : A class of types comprising: int, real32, real64.
+    li #[code numeric] : A class of types comprising: int, real32, real64, complex32, complex64.
+
+  p.
+    If the types of arguments do not satisfy the conditions, argument promotion is
+    attempted. Only the least number of promotions to satisfy the conditions are
+    done. If there are multiple satisfiable sequences of promotions with equal length,
+    the expression is ambiguous and the program is ill-defined.
+
+  p.
+    The following type promotions are attempted:
+
+  ul
+    li int &#8594 real32
+    li int &#8594 real64
+    li real32 &#8594 complex32
+    li real64 &#8594 complex64
+
+  h2 Unary and binary operators
+
+  :markdown-it
+
+      expression          | result      | conditions          | comments
+      --------------------|-------------|---------------------|----------
+      `!bool`             | `bool`      |                     |
+      `bool || bool`      | `bool`      |                     |
+      `bool && bool`      | `bool`      |                     |
+      `bool && bool`      | `bool`      |                     |
+      `a == a`            | `bool`      |                     |
+      `a != a`            | `bool`      |                     |
+      `a < a`             | `bool`      | `a : arithmetic`    |
+      `a <= a`            | `bool`      | `a : arithmetic`    |
+      `a > a`             | `bool`      | `a : arithmetic`    |
+      `a >= a`            | `bool`      | `a : arithmetic`    |
+      `a + a`             | `bool`      | `a : numeric`       |
+      `a - a`             | `bool`      | `a : numeric`       |
+      `a * a`             | `bool`      | `a : numeric`       |
+      `a / a`             | `bool`      | `a : real or complex` | Floating point or complex division.
+      `a // a`            | `bool`      | `a : arithmetic`      | Integer division.
+      `int % int`         | `int`       |                       | Remainder.
+      `a ^ a`             | `a`         | `a : arithmetic`      | Remainder.
 
 
-  h2 Math Functions
+  h2 Math functions
+
+  :markdown-it
+
+      expression     | result      | conditions          | comments
+      ---------------|-------------|---------------------|----------
+      `exp(a)`       | `a`          | `a : real or complex`  |
+      `exp2(a)`      | `a`          | `a : int or real`      |
+      `log(a)`       | `a`          | `a : real or complex`  |
+      `log2(a)`      | `a`          | `a : real`             |
+      `log10(a)`     | `a`          | `a : real or complex`  |
+      `sqrt(a)`      | `a`          | `a : real or complex`  |
+      `sin(a)`       | `a`          | `a : real or complex`  |
+      `cos(a)`       | `a`          | `a : real or complex`  |
+      `tan(a)`       | `a`          | `a : real or complex`  |
+      `asin(a)`      | `a`          | `a : real or complex`  |
+      `acos(a)`      | `a`          | `a : real or complex`  |
+      `atan(a)`      | `a`          | `a : real or complex`  |
+      `ceil(a)`      | `int`         | `a : int or real`      |
+      `floor(a)`     | `int`         | `a : int or real`      |
+      `abs(a)`       | `a`          | `a : int or real`      |
+      `min(a,a)`     | `a`          | `a : int or real`      |
+      `max(a,a)`     | `a`          | `a : int or real`      |
+
+  h2 Complex number functions
+
+  :markdown-it
+
+      expression     | result      | conditions          | comments
+      ---------------|-------------|---------------------|----------
+      `real(a)`      | `real`      | `a : complex`       | Real part of complex number.
+      `imag(a)`      | `real`      | `a : complex`       | Imaginary part of complex number.
+
+
+  h2 #[a(name='type-conversion') Type conversion functions]
+
+  :markdown-it
+
+      expression     | result      | conditions          | comments
+      ---------------|-------------|---------------------|----------
+      `real32(a)`    | `real32`    | `a : arithmetic`    |
+      `real64(a)`    | `real64`    | `a : arithmetic`    |
+      `complex32(a)` | `real64`    | `a : numeric`       |
+
+
+  h1: a(name='broadcasting') Broadcasting
+
+  h2 Broadcasting of primitive operations
+
+  p.
+    When a primitive operation is applied to arrays, it is performed pointwise
+    on array elements, given that the array sizes are compatible.
+
+  p.
+    Two array sizes are compatible if they are equal in all common dimensions.
+    The result of the operation will have the size of the array with more dimensions.
+
+  p.
+    If an argument has less dimensions than the result, the result at any index
+    will use the value of the argument at an index equal in the common dimensions.
+
+  p.
+    In addition, a primitive value is compatible with an array of any size,
+    and will be used for all the result values.
+
+  p.
+    For example, the array "a" can be multiplied with a constant value (b),
+    with an array of equal size (c), or an array with more dimensions (d):
 
   pre.
-    exp, exp2, log, log2, log10,
-    sqrt, sin, cos, tan, asin, acos, atan,
-    ceil, floor, abs, min, max
+    a = [t -> sin(t*0.2)];
+    b = a * 0.1;
+    c = a * [t -> sin(t*0.01)];
+    d = a * [t -> [10: i -> sin(t*0.1/i)]]
 
-  h2 Complex numbers
+  h2 Broadcasting in indexing
 
-  p Accessing real and imaginary part of a complex number:
+  p.
+    An array or primitive value can be indexed with more indices than it has
+    dimensions, resulting in the array value at an index with equal common dimensions.
 
-  pre real, imag
+  p.
+    For example, the function "f" can be applied to a primitive value (a), in which
+    case !{'<code>k[t]</code>'} is a constant expression. But it can also be applied to
+    a signal (b) so that !{'<code>k[t]</code>'} is variable:
 
-  h2 Type conversion
+  pre.
+    f(k) = [t -> sin(t * k[t])];
+    a = f(0.1);
+    b = f([t -> sin(t * 0.01)]);
 
-  pre real32, real64, complex32, complex64.
+  h2 Broadcasting in array definition
 
-  h1 Broadcasting
+  p.
+    Broadcasting also applies to individual mappings in an array definition.
+    If the mapped values are arrays of different sizes, the result reuses
+    values of arrays with smaller number of dimensions just like in a primitive
+    operation:
 
-
+  pre.
+    a = [
+      0 -> 1;
+      t -> [10: i -> t + i]
+    ]

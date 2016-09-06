@@ -50,6 +50,25 @@ body { margin: 0px }
 #page-content h2 { font-family: 'Share Tech', sans-serif; font-size: 14pt; color: #000066 }
 #page-content a  { text-decoration: none; color: #000066 }
 
+#page-content table, th, td {
+  border: 1px solid rgb(200,200,200);
+}
+
+#page-content td {
+  padding: 4px
+}
+
+#page-content table {
+  border-collapse: collapse;
+}
+
+
+#page-content code {
+  background-color: rgb(230,230,230);
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
 #arrp-input {
   width: 100%;
 }

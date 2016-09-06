@@ -34,6 +34,8 @@ expr =
     |
     array-enum
     |
+    array-concat
+    |
     array-application
     |
     array-recursion
@@ -61,30 +63,30 @@ lambda =
 
 func-application = expr "(" expr-list ")"
 
-array-func = "[" ( array-ranges ":" )? array-patterns "]"
+array-func = "[" ( array-sizes ":" )? index-mappings "]"
 
-array-ranges = array-range { "," array-range }
+array-sizes = array-size { "," array-size }
 
-array-range = expr | "~"
+array-size = expr | "~"
 
-array-patterns = array-pattern ( ";" array-pattern )*  ";"?
+index-mappings = index-mapping ( ";" index-mapping )*  ";"?
 
-array-pattern =
-    array-pattern-vars "->" expr
+index-mapping =
+    index-pattern "->" expr
     |
-    array-pattern-vars array-domains
+    index-pattern ( "|" index-guard "->" expr )* "|" expr
 
-array-pattern-vars = array-pattern-var ( "," array-pattern-var )*
+index-pattern = index-pattern-elem ( "," index-pattern-elem )*
 
-array-pattern-var = id | int
+index-pattern-elem = id | int
 
-array-domains = ( array-domain )* "|" expr
-
-array-domain = "|" expr "->" expr
+index-guard = expr
 
 array-enum = "[" array-enum-elem ( ";" array-enum-elem )*  "]"
 
 array-enum-elem = expr
+
+array-concat = expr "++" expr
 
 array-application = array-app-object "[" expr-list "]"
 
