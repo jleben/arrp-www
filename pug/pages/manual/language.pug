@@ -181,7 +181,7 @@ block content
     of the array size:
 
   pre.
-    s = [#[b ~],5: t -> sin(t*5)]
+    s = [#[b ~],5: t,i -> sin(t*i)]
 
   p.
     Alternatively, an infinite array size is assumed when no size is given.
@@ -318,7 +318,7 @@ block content
 
   p.
     Literal values can be created for the following types:
-    int64, real64, complex64, and boolean
+    boolean, int, real64, complex64
     (see #[a(href=ref_grammar('literal')) Grammar: literal]).
 
   p.
@@ -382,7 +382,7 @@ block content
       `a / a`             | `bool`      | `a : real or complex` | Floating point or complex division.
       `a // a`            | `bool`      | `a : simple-numeric`      | Integer division.
       `int % int`         | `int`       |                       | Remainder.
-      `a ^ a`             | `a`         | `a : simple-numeric`      | Remainder.
+      `a ^ a`             | `a`         | `a : simple-numeric`      | Exponentiation.
 
 
   h2 Math functions
