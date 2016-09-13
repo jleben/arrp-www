@@ -21,6 +21,8 @@ pre.
       |
       #[a(href='#literal') literal]
       |
+      #[a(href='#infinity') infinity]
+      |
       #[a(href='#unary-op') unary-op] #[a(href='#expr') expr]
       |
       #[a(href='#expr') expr] #[a(href='#binary-op') binary-op] #[a(href='#expr') expr]
@@ -30,6 +32,8 @@ pre.
       #[a(href='#lambda') lambda]
       |
       #[a(href='#func-application') func-application]
+      |
+      #[a(href='#func-composition') func-composition]
       |
       #[a(href='#array-func') array-func]
       |
@@ -64,11 +68,11 @@ pre.
   
   #[a(name='func-application') func-application] = #[a(href='#expr') expr] "(" #[a(href='#expr-list') expr-list] ")"
   
-  #[a(name='array-func') array-func] = "[" ( #[a(href='#array-sizes') array-sizes] ":" )? #[a(href='#index-mappings') index-mappings] "]"
+  #[a(name='func-composition') func-composition] = #[a(href='#expr') expr] "." #[a(href='#expr') expr]
   
-  #[a(name='array-sizes') array-sizes] = #[a(href='#array-size') array-size] { "," #[a(href='#array-size') array-size] }
+  #[a(name='array-func') array-func] = "[" ( #[a(href='#array-bounds') array-bounds] ":" )? #[a(href='#index-mappings') index-mappings] "]"
   
-  #[a(name='array-size') array-size] = #[a(href='#expr') expr] | "~"
+  #[a(name='array-bounds') array-bounds] = #[a(href='#expr-list') expr-list]
   
   #[a(name='index-mappings') index-mappings] = #[a(href='#index-mapping') index-mapping] ( ";" #[a(href='#index-mapping') index-mapping] )*  ";"?
   
@@ -116,6 +120,8 @@ pre.
   #[a(name='qualified-id') qualified-id] = #[a(href='#id') id] "." #[a(href='#id') id]
   
   #[a(name='literal') literal] = #[a(href='#int') int] | #[a(href='#real') real] | #[a(href='#complex') complex] | #[a(href='#boolean') boolean]
+  
+  #[a(name='infinity') infinity] = "~"
   
   #[a(name='int') int] = [0-9]+
   

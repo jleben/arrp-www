@@ -20,6 +20,8 @@ expr =
     |
     literal
     |
+    infinity
+    |
     unary-op expr
     |
     expr binary-op expr
@@ -29,6 +31,8 @@ expr =
     lambda
     |
     func-application
+    |
+    func-composition
     |
     array-func
     |
@@ -63,11 +67,11 @@ lambda =
 
 func-application = expr "(" expr-list ")"
 
-array-func = "[" ( array-sizes ":" )? index-mappings "]"
+func-composition = expr "." expr
 
-array-sizes = array-size { "," array-size }
+array-func = "[" ( array-bounds ":" )? index-mappings "]"
 
-array-size = expr | "~"
+array-bounds = expr-list
 
 index-mappings = index-mapping ( ";" index-mapping )*  ";"?
 
@@ -115,6 +119,8 @@ id = [a-zA-Z] [a-zA-Z0-9_]*
 qualified-id = id "." id
 
 literal = int | real | complex | boolean
+
+infinity = "~"
 
 int = [0-9]+
 
