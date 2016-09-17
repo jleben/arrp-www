@@ -1,6 +1,6 @@
 pre.
   
-  #[a(name='module') module] = #[a(href='#module-decl') module-decl]?  #[a(href='#imports') imports]? #[a(href='#bindings') bindings]?
+  #[a(name='module') module] = #[a(href='#module-decl') module-decl]? #[a(href='#imports') imports] #[a(href='#inputs') inputs] #[a(href='#bindings') bindings]?
   
   #[a(name='module-decl') module-decl] = "module" #[a(href='#id') id] ";"
   
@@ -8,11 +8,21 @@ pre.
   
   #[a(name='import-decl') import-decl] = "import" #[a(href='#id') id] ( "as" #[a(href='#id') id] )? ";"
   
+  #[a(name='inputs') inputs] = #[a(href='#input-decl') input-decl]*
+  
+  #[a(name='input-decl') input-decl] = "input" #[a(href='#id') id] ":" #[a(href='#type') type] ";"
+  
   #[a(name='bindings') bindings] = #[a(href='#binding') binding] ( ";" #[a(href='#binding') binding] )*  ";"?
   
   #[a(name='binding') binding] = #[a(href='#id') id] ( "(" #[a(href='#param-list') param-list] ")" )? "=" #[a(href='#expr') expr]
   
   #[a(name='param-list') param-list] = #[a(href='#id') id] ( "," #[a(href='#id') id] )*
+  
+  #[a(name='type') type] = #[a(href='#array-type') array-type] | #[a(href='#primitive-type') primitive-type]
+  
+  #[a(name='array-type') array-type] = "[" #[a(href='#expr-list') expr-list] "]" #[a(href='#primitive-type') primitive-type]
+  
+  #[a(name='primitive-type') primitive-type] = #[a(href='#id') id]
   
   #[a(name='expr') expr] =
       #[a(href='#id') id]

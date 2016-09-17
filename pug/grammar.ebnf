@@ -1,5 +1,5 @@
 
-module = module-decl?  imports? bindings?
+module = module-decl? imports inputs bindings?
 
 module-decl = "module" id ";"
 
@@ -7,11 +7,21 @@ imports = import-decl*
 
 import-decl = "import" id ( "as" id )? ";"
 
+inputs = input-decl*
+
+input-decl = "input" id ":" type ";"
+
 bindings = binding ( ";" binding )*  ";"?
 
 binding = id ( "(" param-list ")" )? "=" expr
 
 param-list = id ( "," id )*
+
+type = array-type | primitive-type
+
+array-type = "[" expr-list "]" primitive-type
+
+primitive-type = id
 
 expr =
     id
