@@ -14,7 +14,18 @@ block content
     See also the #[a(href=base_url+'/doc/syntax') Formal syntax specification]. This document
     provides links into the formal specification whenever a syntactical element is introduced.
 
-  h1 Modules
+  h1 Table of contents
+
+  ul
+    li: a(href='#modules') Modules
+    li: a(href='#input-output') Input and output
+    li: a(href='#bindings') Name bindings and functions
+    li: a(href='#arrays') Arrays
+    li: a(href='#primitive-values') Primitive values
+    li: a(href='#built-in-ops') Built-in operations and functions
+    li: a(href='#pointwise-ops') Pointwise operations and broadcasting
+
+  h1: a(name='modules') Modules
 
 
   p.
@@ -67,7 +78,7 @@ block content
     using qualified identifiers
     (see #[a(href=ref_grammar('qualified-id')) Grammar: qualified-id]):
 
-  h1 Input and output
+  h1: a(name='input-output') Input and output
 
   p.
     The output of an Arrp program is the value of the global name "main",
@@ -171,7 +182,7 @@ block content
     See #[a(href='#recursive-arrays') Recursive arrays].
 
 
-  h1 Arrays
+  h1: a(name='arrays') Arrays
 
   p.
     Arrays are a special kind of functions that map integers
@@ -337,7 +348,7 @@ block content
   pre.
     a = [0; 1] ++ [t -> a[t] * 2];
 
-  h1 Primitive values
+  h1: a(name='primitive-values') Primitive values
 
   p.
     Arrp supports the following primitive types:
@@ -359,11 +370,11 @@ block content
     An expression can be converted to other primitive types
     (see #[a(href='#type-conversion') Type Conversion]).
 
-  h1 Built-in operations and functions
+  h1: a(name='built-in-ops') Built-in operations and functions
 
   p.
     Built-in operations and functions operate on primitive types.
-    They can also be applied to arrays, #[a(href='#pointwise') pointwise].
+    They can also be applied to arrays, #[a(href='#pointwise-ops') pointwise].
 
   p.
     The following tables list relations between argument types
@@ -468,7 +479,7 @@ block content
       `complex64(a)` | `complex64` | `a : numeric`       |
 
 
-  h1: a(name='pointwise') Pointwise operations and broadcasting
+  h1: a(name='pointwise-ops') Pointwise operations and broadcasting
 
   h2 Pointwise application of primitive operations
 
