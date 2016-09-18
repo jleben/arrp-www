@@ -26,8 +26,51 @@ block content
   h1 The program class
 
   p.
-    An Arrp program is represented as a C++ class. More information about the usage of
-    this class will be added soon.
+    An Arrp program is represented as a C++ class named "program".
+
+    For example:
+
+  pre.
+    module example;
+
+    input a : int;
+    input b : [~,10]real64;
+    ...
+
+  pre.
+    namespace example
+    {
+      template <typename IO>
+      class program
+      {
+      private:
+          int a;
+          double b[10];
+      public:
+          IO * io;
+          void prelude()
+          {
+              ... input_a(a); ... input_b(b); ...
+          }
+          void period()
+          {
+              ... input_b(b); ...
+          }
+      };
+    }
+
+  h2 Prelude and period
+
+  p.
+    The program class has two functions, named "prelude" and "period".
+
+  p.
+    The prelude computes all finite data and possibly an introductory part of infinite arrays.
+    It should be called before calling the period function and only once.
+
+  p.
+    The period computes one period of the infinite arrays. It should be called repeatedly
+    after calling the prelude once.
 
   h2 Input and output
 
@@ -35,13 +78,15 @@ block content
     The program class is a template with a parameter IO representing the type that
     provides the input and consumes the output. The class contains
     a data field #[code IO* io] - a pointer which must be initialized to an instance
-    of IO before using the rest of the program class:
+    of IO before using the rest of the class.
 
   p.
     When some input or output data needs to be exchanged, the program class will
     call a function on the IO with an argument: the buffer where the data is to be written
-    or read from as an argument. For an input, the called function has the same
-    name as the input in Arrp. For the output, the function named "output" is called:
+    or read from.
+    For an input, the function named "input_name" is called, where "name"
+    is replaced by the name of the input as declared in Arrp.
+    The function named "output" is called to exchange output data.
 
   p.
     If an input or output is an infinite array, the input or output function is
