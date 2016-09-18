@@ -68,6 +68,14 @@ body { margin: 0px }
   padding-right: 2px;
 }
 
+#page-content pre {
+  background-color: rgb(250,250,250);
+  //border-color: rgb(100,100,100);
+  border: 1px solid rgb(200,200,200);
+  padding: 10px;
+  border-radius: 7px;
+}
+
 #arrp-input {
   width: 100%;
 }
