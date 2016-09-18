@@ -3,9 +3,16 @@ extends ../../main.pug
 block content
 
   -
-    function grammar_url(sym) { return base_url + '/manual/syntax#' + sym }
+    function grammar_url(sym) { return base_url + '/doc/syntax#' + sym }
     function ref_grammar(sym) { return grammar_url(sym) }
     function grammar_ref(sym,text) { return '<a href="' + grammar_url(sym) + '">' + text + '</a>' }
+
+  p.
+    This document walks through the syntactical elements of an Arrp program, and describes their semantics.
+
+  p.
+    See also the #[a(href=base_url+'/doc/syntax') Formal syntax specification]. This document
+    provides links into the formal specification whenever a syntactical element is introduced.
 
   h1 Modules
 
