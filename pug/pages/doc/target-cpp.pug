@@ -17,6 +17,8 @@ block content
 
   pre arrp example.arrp --cpp something
 
+  h1 Namespace
+
   p.
     By default the C++ code is placed into a namespace with the same name as the module name.
     To generate code in a different namespace, provide the "--cpp-namespace" option:
@@ -27,20 +29,24 @@ block content
 
   p.
     An Arrp program is represented as a C++ class named "program".
-
     For example:
+
+  p: b Arrp:
 
   pre.
     module example;
 
     input a : int;
     input b : [~,10]real64;
+
     ...
+
+  p: b C++:
 
   pre.
     namespace example
     {
-      template <typename IO>
+      template #{'<typename IO>'}
       class program
       {
       private:
