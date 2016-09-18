@@ -1,4 +1,4 @@
-#include "kernel.cpp"
+#include "arrp_program.cpp"
 #include "generic_printer.hpp"
 
 #include <cstring>
@@ -15,14 +15,14 @@ int main(int argc, char * argv[])
     int max_reps = 10000;
 
     auto d = new arrp_www::generic_printer(out_count);
-    auto k = new kernel::state<arrp_www::generic_printer>;
+    auto k = new arrp::program<arrp_www::generic_printer>;
     k->io = d;
 
-    k->initialize();
+    k->prelude();
 
     while(max_reps-- && d->remaining_output_count() > 0)
     {
-        k->process();
+        k->period();
     }
 
     delete k;

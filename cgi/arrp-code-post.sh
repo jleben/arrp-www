@@ -32,7 +32,7 @@ if [[ $code_size -gt $code_size_limit ]]; then
   exit 0
 fi
 
-arrp code.arrp --cpp kernel --cpp-namespace kernel 2> errors.log
+arrp code.arrp --cpp arrp_program --cpp-namespace arrp 2> errors.log
 
 if [ $? != 0 ]
 then
