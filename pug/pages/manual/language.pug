@@ -2,17 +2,28 @@ extends ../../main.pug
 
 block content
 
+  -
+    function grammar_url(sym) { return base_url + '/manual/syntax#' + sym }
+    function ref_grammar(sym) { return grammar_url(sym) }
+    function grammar_ref(sym,text) { return '<a href="' + grammar_url(sym) + '">' + text + '</a>' }
+
   h1 Modules
 
-  - function ref_grammar(sym) { return base_url + '/manual/syntax#' + sym }
 
   p.
-    A module is the smallest unit of compilation.
+    A module is the smallest unit of compilation, residing in a file or provided
+    to the compiler through standard input.
 
   p.
-    It consists of a declaration of its name,
-    a set of declarations of imported modules,
-    and a set of global name bindings:
+    A module consists of:
+
+  ul
+    li A declaration of the module name
+    li Declarations of imported modules
+    li Declarations of #[a(href='#input-output') inputs]
+    li Global #[a(href='#bindings') name bindings]
+
+  p See #[a(href=ref_grammar('module')) Grammar: module].
 
   pre.
       module example;
@@ -20,9 +31,9 @@ block content
       import lib1;
       import lib2 as l2;
 
-      main = lib1.alpha + l2.beta;
+      input a : int;
 
-  p See #[a(href=ref_grammar('module')) Grammar: module]
+      main = lib1.alpha(a) + l2.beta(a);
 
   h2 Default module name
 
@@ -42,26 +53,42 @@ block content
      The file must either be adjacent to the location of the importing module,
      or in one of the #[i import directories] given as an option to the compiler.
 
-  h2 Accessing imported names using qualified identifiers
+  h2 Using names from imported modules
 
   p.
     The names in the imported module are available in the importing module
     using qualified identifiers
     (see #[a(href=ref_grammar('qualified-id')) Grammar: qualified-id]):
 
-
-  h2 The "main" expression
-
-  p.
-    The main module being compiled must contain an expression named "main"
-    which represents the entire program.
-
-
-
-  h1 Name bindings and functions
+  h1 Input and output
 
   p.
-    Global bindings bind names to functions or constant expressions:
+    The output of an Arrp program is the value of the global name "main",
+    which must be present.
+
+  p.
+    Inputs must be explicitly declared, along with their type
+    (see !{grammar_ref('inputs','Grammar: inputs')}).
+
+  p.
+    In the
+    following example, two inputs are declared: an integer named "a" and
+    an array named "b" with 64-bit floating point elements and two dimensions
+    - the first infinite and the second of size 10:
+
+  pre.
+    input a : int;
+    input b : [~,10]real64;
+
+  p.
+    How input and output data is exchanged with the environment depends
+    on how an Arrp program is compiled.
+
+
+  h1: a(name='bindings') Name bindings and functions
+
+  p.
+    Name bindings bind names to functions or constant expressions:
 
   pre.
     pi = 3.14159265359;
