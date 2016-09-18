@@ -363,7 +363,7 @@ block content
 
   p.
     Built-in operations and functions operate on primitive types.
-    They can also be applied to arrays, via #[a(href='#broadcasting') broadcasting].
+    They can also be applied to arrays, #[a(href='#pointwise') pointwise].
 
   p.
     The following tables list relations between argument types
@@ -468,20 +468,25 @@ block content
       `complex64(a)` | `complex64` | `a : numeric`       |
 
 
-  h1: a(name='broadcasting') Broadcasting
+  h1: a(name='pointwise') Pointwise operations and broadcasting
 
-  h2 Broadcasting of primitive operations
+  h2 Pointwise application of primitive operations
 
   p.
     When a primitive operation is applied to arrays, it is performed pointwise
-    on array elements, given that the array sizes are compatible.
+    on array elements, given that the array sizes are compatible:
+
+  pre.
+    a = [5: i -> i] + [5: i -> 10*i];
+
+  h2 Broadcasting
 
   p.
     Two array sizes are compatible if they are equal in all common dimensions.
     The result of the operation will have the size of the array with more dimensions.
 
   p.
-    If an argument has less dimensions than the result, the result at any index
+    If an argument has less dimensions than the result, the result at some index
     will use the value of the argument at an index equal in the common dimensions.
 
   p.
