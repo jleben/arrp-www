@@ -1,27 +1,83 @@
 
-window.onload = function() { selectExample() };
+window.onload = function() {
+  populateExampleList();
+  selectExample();
+};
 
 var examples = {
-  fibonacci:
-`## Edit me!
+triangle:
+`\
+phase = [i -> (i % 10) / 10];
 
-fib = [
-  0 -> 0;
-  1 -> 1;
-  i -> fib[i-1] + fib[i-2];
+triangle = 1 - abs(2 * phase - 1);
+
+main = triangle`,
+osc:
+`\
+## Supports variable frequency
+
+phase(freq) = p = [
+    0 -> 0;
+    t -> let x = p[t-1] + freq[t] in
+      if x < 1 then x else x - 1
 ];
 
-main = fib`,
+osc(freq) = sin(phase(freq) * 2 * pi)
+  where pi = atan(1) * 4;
 
-  triangle:
-`## Edit me!
+main = osc(0.1); ## Constant frequency
+## main = osc([t -> 0.1 + t/1000]); ## Or variable frequency
+`,
+windows:
+`\
+windows(size, hop, x) = [t -> [size: i -> x[t*hop + i]]];
 
-sawtooth = [i -> (i % 10) / 10];
+signal = [t -> t];
 
-triangle = 1 - abs(2 * sawtooth - 1);
+main = windows(4,2,signal);
+`,
+arg_max:
+`\
+arg_max(x) = y[#y-1,1]
+    where y = [
+        0 -> [x[0]; 0];
+        i -> if x[i] > y[i-1,0]
+             then [x[i]; i]
+             else y[i-1]
+    ];
 
-main = triangle`
+main = arg_max([3;0;5;9;4;2]);
+`,
+lp:
+`\
+delay(v,a) = [0 -> v; t -> a[t-1]];
+
+lp(a,x) =
+  y = a*x + (1-a)*delay(0,y);
+
+## Test signal: 3 harmonics
+signal = [t -> [3:i -> sin(f(i)*t*2*pi)]]
+   where { pi = atan(1)*4; f(i) = (2*i+1)*0.01; };
+
+main = lp(0.1, signal);
+`
 };
+
+function populateExampleList() {
+  list = document.getElementById("example-selection");
+  function addExample(value, name) {
+    option = document.createElement('option');
+    option.value = value;
+    text = document.createTextNode(name);
+    option.appendChild(text);
+    list.appendChild(option);
+  }
+  addExample('triangle', 'Triangle Wave');
+  addExample('osc', 'Variable-Frequency Oscillator');
+  addExample('lp', 'Recursive Low-pass Filter');
+  addExample('windows', 'Sliding Windows');
+  addExample('arg_max', 'Arg Max');
+}
 
 function selectExample() {
   var key = document.getElementById("example-selection").value;
