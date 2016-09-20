@@ -2,6 +2,7 @@
 #define ARRP_WWW_GENERIC_PRINTER
 
 #include <iostream>
+#include <iomanip>
 
 namespace arrp_www {
 
@@ -10,7 +11,9 @@ class generic_printer
     int m_output_count = 10;
 
 public:
-    generic_printer(int output_count): m_output_count(output_count) {}
+    generic_printer(int output_count): m_output_count(output_count) {
+        cout << std::fixed << std::setprecision(3);
+    }
 
     int remaining_output_count() { return m_output_count; }
 
