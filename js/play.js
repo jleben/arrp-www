@@ -28,6 +28,28 @@ osc(freq) = sin(phase(freq) * 2 * pi)
 main = osc(0.1); ## Constant frequency
 ## main = osc([t -> 0.1 + t/1000]); ## Or variable frequency
 `,
+wavetable_osc:
+`\
+pi = 4*atan(1);
+
+table_size = 20;
+table = [table_size: i -> sin(i/table_size*2*pi)];
+
+interpolate(a,i) =
+  let d = i - floor(i) in
+  a[int(i) % #a] * (1-d) + a[(int(i)+1) % #a] * d;
+
+osc(table, freq) =
+  [~: t -> interpolate(table, t * freq  * #table)];
+
+precise_osc(freq) =
+  [~: t -> sin(t*freq*2*pi)];
+
+freq = 1/9;
+
+## Compare wavetable vs. precise:
+main = [osc(table, freq); precise_osc(freq)];
+`,
 windows:
 `\
 windows(size, hop, x) = [t -> [size: i -> x[t*hop + i]]];
@@ -72,11 +94,12 @@ function populateExampleList() {
     option.appendChild(text);
     list.appendChild(option);
   }
-  addExample('triangle', 'Triangle Wave');
-  addExample('osc', 'Variable-Frequency Oscillator');
-  addExample('lp', 'Recursive Low-pass Filter');
-  addExample('windows', 'Sliding Windows');
-  addExample('arg_max', 'Arg Max');
+  addExample('triangle', 'Triangle wave');
+  addExample('osc', 'Variable-frequency oscillator');
+  addExample('wavetable_osc', 'Wavetable oscillator');
+  addExample('lp', 'Recursive low-pass filter');
+  addExample('windows', 'Sliding windows');
+  addExample('arg_max', 'Arg-max');
 }
 
 function selectExample() {
