@@ -14,8 +14,6 @@ triangle = 1 - abs(2 * phase - 1);
 main = triangle`,
 osc:
 `\
-## Supports variable frequency
-
 phase(freq) = p = [
     0 -> 0;
     t -> let x = p[t-1] + freq[t] in
@@ -25,8 +23,12 @@ phase(freq) = p = [
 osc(freq) = sin(phase(freq) * 2 * pi)
   where pi = atan(1) * 4;
 
-main = osc(0.1); ## Constant frequency
-## main = osc([t -> 0.1 + t/1000]); ## Or variable frequency
+## Using variable frequency:
+main = osc([t -> 0.1 + t/1000]);
+
+## But constant frequency works as well:
+## main = osc(0.1);
+
 `,
 wavetable_osc:
 `\
