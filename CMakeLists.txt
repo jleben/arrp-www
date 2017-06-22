@@ -52,5 +52,6 @@ install(FILES ${ARRP_BUILD_DIR}/compiler/arrp DESTINATION arrp
 install(DIRECTORY DESTINATION request)
 install(FILES ${CMAKE_BINARY_DIR}/nginx/arrp DESTINATION nginx)
 install(FILES ${CMAKE_BINARY_DIR}/systemd/arrp-website.service DESTINATION /etc/systemd/system)
+install(CODE "execute_process(COMMAND chown -R www-data:www-data ${CMAKE_INSTALL_PREFIX}/request)")
 
 add_subdirectory(server)
