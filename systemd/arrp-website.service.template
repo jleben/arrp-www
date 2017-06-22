@@ -1,0 +1,15 @@
+[Unit]
+Description=Arrp website application server
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=${CMAKE_INSTALL_PREFIX}/server/server ${CMAKE_INSTALL_PREFIX}/arrp
+WorkingDirectory=${CMAKE_INSTALL_PREFIX}/request
+
+[Install]
+WantedBy=network.target

@@ -32,8 +32,11 @@ endfunction()
 
 generate_nginx_config()
 
-add_subdirectory(server)
+function(generate_systemd_config)
+    configure_file(systemd/arrp-website.service.template systemd/arrp-website.service)
+endfunction()
 
+generate_systemd_config()
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/html DESTINATION .)
 install(DIRECTORY js DESTINATION .)
@@ -46,5 +49,8 @@ install(FILES ${ARRP_BUILD_DIR}/compiler/arrp DESTINATION arrp
         GROUP_READ GROUP_EXECUTE
         WORLD_READ WORLD_EXECUTE
 )
-
+install(DIRECTORY DESTINATION request)
 install(FILES ${CMAKE_BINARY_DIR}/nginx/arrp DESTINATION nginx)
+install(FILES ${CMAKE_BINARY_DIR}/systemd/arrp-website.service DESTINATION /etc/systemd/system)
+
+add_subdirectory(server)
