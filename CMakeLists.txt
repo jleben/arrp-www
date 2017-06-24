@@ -56,7 +56,8 @@ install(FILES ${ARRP_BUILD_DIR}/compiler/arrp DESTINATION arrp
         WORLD_READ WORLD_EXECUTE
 )
 install(DIRECTORY DESTINATION request)
-install(FILES ${CMAKE_BINARY_DIR}/nginx/arrp DESTINATION nginx)
+install(FILES ${CMAKE_BINARY_DIR}/nginx/arrp DESTINATION /etc/nginx/sites-available)
+install(CODE "execute_process(COMMAND ln -s -f /etc/nginx/sites-available/arrp /etc/nginx/sites-enabled)")
 install(FILES ${CMAKE_BINARY_DIR}/systemd/arrp-website.service DESTINATION /etc/systemd/system)
 install(CODE "execute_process(COMMAND chown -R www-data:www-data ${CMAKE_INSTALL_PREFIX}/request)")
 
