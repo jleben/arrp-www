@@ -153,7 +153,7 @@ void Play_Handler::compile_arrp_code(HTTPServerResponse & response)
     using namespace Poco::Net;
 
     ostringstream cmd;
-    cmd << options().data_path << "/arrp"
+    cmd << options().data_path << "/bin/arrp"
         << " play.arrp"
         << " --cpp arrp_program"
         << " --cpp-namespace arrp"
@@ -182,7 +182,7 @@ void Play_Handler::compile_cpp_code(HTTPServerResponse & response)
 
     ostringstream cmd;
     cmd << "g++ -std=c++17"
-        << " -I" << options().data_path
+        << " -I" << options().data_path << "/include"
         << " -I."
         << " " << options().data_path << "/generic_main.cpp"
         << " -o arrp_program"

@@ -3,16 +3,6 @@ cmake_minimum_required(VERSION 3.0)
 project(arrp-website)
 
 set(URL_PREFIX "" CACHE STRING "")
-set(ARRP_SOURCE_DIR "" CACHE PATH "")
-set(ARRP_BUILD_DIR "" CACHE PATH "")
-
-if (NOT ARRP_SOURCE_DIR)
-    message(FATAL_ERROR "Please set ARRP_SOURCE_DIR!")
-endif()
-
-if (NOT ARRP_BUILD_DIR)
-    message(FATAL_ERROR "Please set ARRP_BUILD_DIR!")
-endif()
 
 find_program(PUG_PROGRAM pug)
 
@@ -48,13 +38,6 @@ install(DIRECTORY ${CMAKE_BINARY_DIR}/html DESTINATION .)
 install(DIRECTORY js DESTINATION .)
 install(DIRECTORY css DESTINATION .)
 install(DIRECTORY arrp DESTINATION .)
-install(FILES ${ARRP_SOURCE_DIR}/cpp/arrp.hpp DESTINATION arrp)
-install(FILES ${ARRP_BUILD_DIR}/compiler/arrp DESTINATION arrp
-    PERMISSIONS
-        OWNER_READ OWNER_WRITE OWNER_EXECUTE
-        GROUP_READ GROUP_EXECUTE
-        WORLD_READ WORLD_EXECUTE
-)
 install(DIRECTORY DESTINATION request)
 install(FILES ${CMAKE_BINARY_DIR}/nginx/arrp DESTINATION /etc/nginx/sites-available)
 install(CODE "execute_process(COMMAND ln -s -f /etc/nginx/sites-available/arrp /etc/nginx/sites-enabled)")
