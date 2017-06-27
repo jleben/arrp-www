@@ -1,6 +1,6 @@
 pre.
   
-  #[a(name='module') module] = #[a(href='#module-decl') module-decl]? #[a(href='#imports') imports] #[a(href='#inputs') inputs] #[a(href='#bindings') bindings]?
+  #[a(name='module') module] = #[a(href='#module-decl') module-decl]? #[a(href='#imports') imports] #[a(href='#declarations') declarations]
   
   #[a(name='module-decl') module-decl] = "module" #[a(href='#id') id] ";"
   
@@ -8,21 +8,33 @@ pre.
   
   #[a(name='import-decl') import-decl] = "import" #[a(href='#id') id] ( "as" #[a(href='#id') id] )? ";"
   
-  #[a(name='inputs') inputs] = #[a(href='#input-decl') input-decl]*
+  #[a(name='declarations') declarations] = ( #[a(href='#declaration') declaration] ( ";" #[a(href='#declaration') declaration] )* )? ";"?
   
-  #[a(name='input-decl') input-decl] = "input" #[a(href='#id') id] ":" #[a(href='#type') type] ";"
+  #[a(name='declaration') declaration] = #[a(href='#input-decl') input-decl] | #[a(href='#external-decl') external-decl] | #[a(href='#local-decl') local-decl]
   
-  #[a(name='bindings') bindings] = #[a(href='#binding') binding] ( ";" #[a(href='#binding') binding] )*  ";"?
+  #[a(name='input-decl') input-decl] = "input" #[a(href='#id') id] "::" #[a(href='#type') type]
   
-  #[a(name='binding') binding] = #[a(href='#id') id] ( "(" #[a(href='#param-list') param-list] ")" )? "=" #[a(href='#expr') expr]
+  #[a(name='external-decl') external-decl] = "external" #[a(href='#id') id] "::" #[a(href='#type') type]
+  
+  #[a(name='local-decl') local-decl] = #[a(href='#type-decl') type-decl] | #[a(href='#value-decl') value-decl]
+  
+  #[a(name='local-decls') local-decls] = #[a(href='#local-decl') local-decl] ( ";" #[a(href='#declaration') declaration] )*
+  
+  #[a(name='type-decl') type-decl] = #[a(href='#id') id] "::" #[a(href='#type') type]
+  
+  #[a(name='value-decl') value-decl] = #[a(href='#id') id] ( "(" #[a(href='#param-list') param-list] ")" )? "=" #[a(href='#expr') expr]
   
   #[a(name='param-list') param-list] = #[a(href='#id') id] ( "," #[a(href='#id') id] )*
   
-  #[a(name='type') type] = #[a(href='#array-type') array-type] | #[a(href='#primitive-type') primitive-type]
+  #[a(name='type') type] = #[a(href='#data-type') data-type] | #[a(href='#function-type') function-type]
+  
+  #[a(name='data-type') data-type] = #[a(href='#array-type') array-type] | #[a(href='#primitive-type') primitive-type]
   
   #[a(name='array-type') array-type] = "[" #[a(href='#expr-list') expr-list] "]" #[a(href='#primitive-type') primitive-type]
   
   #[a(name='primitive-type') primitive-type] = #[a(href='#id') id]
+  
+  #[a(name='function-type') function-type] = #[a(href='#data-type') data-type] ( "," #[a(href='#data-type') data-type] ) "->" #[a(href='#data-type') data-type]
   
   #[a(name='expr') expr] =
       #[a(href='#id') id]
@@ -52,8 +64,6 @@ pre.
       #[a(href='#array-concat') array-concat]
       |
       #[a(href='#array-application') array-application]
-      |
-      #[a(href='#array-recursion') array-recursion]
       |
       #[a(href='#array-size') array-size]
       |
@@ -114,14 +124,14 @@ pre.
   #[a(name='array-size-dim') array-size-dim] = #[a(href='#expr') expr]
   
   #[a(name='let-expr') let-expr] =
-      "let" #[a(href='#binding') binding] "in" #[a(href='#expr') expr]
+      "let" #[a(href='#value-decl') value-decl] "in" #[a(href='#expr') expr]
       |
-      "let" "{" #[a(href='#bindings') bindings] "}" "in" #[a(href='#expr') expr]
+      "let" "{" #[a(href='#local-decls') local-decls] "}" "in" #[a(href='#expr') expr]
   
   #[a(name='where-expr') where-expr] =
-      #[a(href='#expr') expr] "where" #[a(href='#binding') binding]
+      #[a(href='#expr') expr] "where" #[a(href='#value-decl') value-decl]
       |
-      #[a(href='#expr') expr] "where" "{" #[a(href='#bindings') bindings] "}"
+      #[a(href='#expr') expr] "where" "{" #[a(href='#local-decls') local-decls] "}"
   
   #[a(name='expr-list') expr-list] = #[a(href='#expr') expr] ( "," #[a(href='#expr') expr] )*
   

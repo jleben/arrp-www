@@ -1,5 +1,5 @@
 
-module = module-decl? imports inputs bindings?
+module = module-decl? imports declarations
 
 module-decl = "module" id ";"
 
@@ -7,21 +7,33 @@ imports = import-decl*
 
 import-decl = "import" id ( "as" id )? ";"
 
-inputs = input-decl*
+declarations = ( declaration ( ";" declaration )* )? ";"?
 
-input-decl = "input" id ":" type ";"
+declaration = input-decl | external-decl | local-decl
 
-bindings = binding ( ";" binding )*  ";"?
+input-decl = "input" id "::" type
 
-binding = id ( "(" param-list ")" )? "=" expr
+external-decl = "external" id "::" type
+
+local-decl = type-decl | value-decl
+
+local-decls = local-decl ( ";" declaration )*
+
+type-decl = id "::" type
+
+value-decl = id ( "(" param-list ")" )? "=" expr
 
 param-list = id ( "," id )*
 
-type = array-type | primitive-type
+type = data-type | function-type
+
+data-type = array-type | primitive-type
 
 array-type = "[" expr-list "]" primitive-type
 
 primitive-type = id
+
+function-type = data-type ( "," data-type ) "->" data-type
 
 expr =
     id
@@ -51,8 +63,6 @@ expr =
     array-concat
     |
     array-application
-    |
-    array-recursion
     |
     array-size
     |
@@ -113,14 +123,14 @@ array-size-object = expr
 array-size-dim = expr
 
 let-expr =
-    "let" binding "in" expr
+    "let" value-decl "in" expr
     |
-    "let" "{" bindings "}" "in" expr
+    "let" "{" local-decls "}" "in" expr
 
 where-expr =
-    expr "where" binding
+    expr "where" value-decl
     |
-    expr "where" "{" bindings "}"
+    expr "where" "{" local-decls "}"
 
 expr-list = expr ( "," expr )*
 
