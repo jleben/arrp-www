@@ -21,7 +21,8 @@ block content
   ul
     li: a(href='#modules') Modules
     li: a(href='#input-output') Input and output
-    li: a(href='#bindings') Name bindings and functions
+    li: a(href='#value-decl') Values and functions
+    li: a(href='#extern-decl') External functions
     li: a(href='#arrays') Arrays
     li: a(href='#primitive-values') Primitive values
     li: a(href='#built-in-ops') Built-in operations and functions
@@ -35,25 +36,31 @@ block content
     to the compiler through standard input.
 
   p.
-    A module consists of:
+    A module consists of different kinds of declarations:
 
   ul
     li A declaration of the module name
     li Declarations of imported modules
-    li Declarations of #[a(href='#input-output') inputs]
-    li Global #[a(href='#bindings') name bindings]
+    li Declarations of #[a(href='#input-output') input values]
+    li Declarations of #[a(href='#value-decl') named values and functions]
+    li Declarations of #[a(href='#type-decl') types of those names]
+    li Declarations of #[a(href='#extern-decl') external functions]
 
   p See #[a(href=ref_grammar('module')) Grammar: module].
 
   pre.
       module example;
 
-      import lib1;
-      import lib2 as l2;
+      import lib;
 
-      input a : int;
+      input iota :: int;
 
-      main = lib1.alpha(a) + l2.beta(a);
+      external eta :: int -> real64;
+
+      gamma(x) = x + 1;
+
+      main :: real64;
+      main = lib.alpha(1) + eta(2) - gamma(iota);
 
   h2 Default module name
 
@@ -97,18 +104,19 @@ block content
     - the first infinite and the second of size 10:
 
   pre.
-    input a : int;
-    input b : [~,10]real64;
+    input a :: int;
+    input b :: [~,10]real64;
 
   p.
     How input and output data is exchanged with the environment depends
     on the target form of compilation. See also the page on the
     #[a(href=base_url+'/doc/target-cpp') C++ target].
 
-  h1: a(name='bindings') Name bindings and functions
+
+  h1: a(name='value-decl') Values and functions
 
   p.
-    Name bindings bind names to functions or constant expressions:
+    Value declarations define values and functions and bind them to names:
 
   pre.
     pi = 3.14159265359;
@@ -117,22 +125,33 @@ block content
 
     area_of_right_triangle(a, b) = a * b / 2;
 
-  p See #[a(href=ref_grammar('bindings')) Grammar: bindings]
+    a = area_of_right_triangle(10, 5);
+
+  p See #[a(href=ref_grammar('value-decl')) Grammar: value-decl]
 
   p.
-    The scope of a global name is the expression to which it is bound,
-    and the expressions of the following global names.
+    The scope of globally declared names is the entire module. They are mutually recursive.
+
+  h2 Local declarations
+
+  p.
+    Names with scope local to an expression can be declared using the
+    "let" and "where" expressions:
+
+  pre.
+    f(x) = #[b let] y = x * x #[b in] sin(y) + cos(y);
+
+    g(x) = sin(y) + cos(y) #[b where] y = x * x;
+
+  p.
+    See #[a(href=ref_grammar('let-expr')) Grammar: let-expr],
+    #[a(href=ref_grammar('where-expr')) Grammar: where-expr]
 
   h2 Function application and polymorphism
 
   p.
     A function is applied when followed by arguments in parenthesis
-    (see #[a(href=ref_grammar('func-application')) Grammar: func-application]):
-
-  pre.
-    area_of_right_triangle(a, b) = a * b / 2;
-
-    main = #[b area_of_right_triangle(10, 5)];
+    (see #[a(href=ref_grammar('func-application')) Grammar: func-application]).
 
   p.
     Partial application is supported: a function applied to less
@@ -147,21 +166,6 @@ block content
 
   // TODO: add example
 
-  h2 Local name bindings
-
-  p.
-    Names with scope local to an expression can be bound using the
-    "let" and "where" expressions:
-
-  pre.
-    f(x) = #[b let] y = x * x #[b in] sin(y) + cos(y);
-
-    g(x) = sin(y) + cos(y) #[b where] y = x * x;
-
-  p.
-    See #[a(href=ref_grammar('let-expr')) Grammar: let-expr],
-    #[a(href=ref_grammar('where-expr')) Grammar: where-expr]
-
   h2 Lambda functions
 
   p.
@@ -171,11 +175,28 @@ block content
   pre.
     f(g) = g(1,2) + g(3,4);
 
-    main = f(#[b \x, y -> x * y]);
+    a = f(#[b \x, y -> x * y]);
 
   p See #[a(href=ref_grammar('lambda')) Grammar: lambda].
 
-  h2 Recursion
+  h2: a(name='type-decl') Type annotations
+
+  p.
+    Occasionally, you may want to provide an explicit type declaration
+    for a name:
+
+  pre.
+    y :: real64;
+    y = 1 + f(x);
+
+  p.
+    See #[a(href=ref_grammar('type-decl')) Grammar: type-decl].
+
+  p.
+    The type of a name can not be changed using a type declaration -
+    the declared type must match the type of the name's expression.
+
+  h2: a(name='recursion') Recursion
 
   p.
     Recursion is allowed for the purpose of recursive arrays. However,
@@ -183,6 +204,31 @@ block content
     of functional recursion can be achieved with recursive arrays.
     See #[a(href='#recursive-arrays') Recursive arrays].
 
+  p.
+    Due to a current limitation, the Arrp compiler requires
+    a #[a(href='#type-decl') type annotation] for
+    at least one name in any recursive set of names.
+
+
+  h1: a(name='extern-decl') External functions
+
+  p.
+    An external function is declared with a name and a type,
+    and it allows the name to be used as any other function,
+    except that it is not polymorphic:
+
+  pre.
+    external transform :: [100]real64 -> [50]real64;
+    x = [100: i -> sin(i/100)];
+    y = transform(x);
+
+  p.
+    See #[a(href=ref_grammar('external-decl')) Grammar: external-decl].
+
+  p.
+    Precisely how an external function is executed depends
+    on the target form of compilation. See also the page on the
+    #[a(href=base_url+'/doc/target-cpp') C++ target].
 
   h1: a(name='arrays') Arrays
 
@@ -321,15 +367,18 @@ block content
     "this":
 
   pre.
+    a :: [~]int;
     a = [0 -> 0; t -> a[t-1] * 0.8];
+
     b = [0 -> 0; t -> this   * 0.8];
 
   p.
-    Using local names, it is possible to define mutually recursive arrays:
+    Multiple arrays can be mutually recursive:
 
   pre.
-    a = [t -> b[t] + 1]
-      where b = [0 -> 0; t -> a[t-1] * 2]
+    a :: [~]int;
+    a = [0 -> 0; t -> b[t-1] * 0.8];
+    b = [t -> a[t] + 1];
 
   h2 Array enumeration
 
@@ -348,6 +397,7 @@ block content
     (see #[a(href=ref_grammar('array-concat')) Grammar: array-concat]):
 
   pre.
+    a :: [~]int;
     a = [0; 1] ++ [t -> a[t] * 2];
 
   h1: a(name='primitive-values') Primitive values
