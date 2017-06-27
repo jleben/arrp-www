@@ -4,22 +4,7 @@ project(arrp-website)
 
 set(URL_PREFIX "" CACHE STRING "")
 
-find_program(PUG_PROGRAM pug)
-
-if (PUG_PROGRAM)
-    add_custom_command (
-        OUTPUT html/play.html
-        COMMAND pug
-            "${CMAKE_SOURCE_DIR}/pug/pages"
-            -O "{base_url: '${URL_PREFIX}'}"
-            --out "${CMAKE_BINARY_DIR}/html"
-        VERBATIM
-    )
-
-    add_custom_target(pug_to_html ALL DEPENDS html/play.html)
-else()
-    message(STATUS "Could not find pug. Pug files will not be processed.")
-endif()
+add_subdirectory(pug)
 
 function(generate_nginx_config)
     set(FILE_PREFIX ${CMAKE_INSTALL_PREFIX})
