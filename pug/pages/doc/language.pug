@@ -259,7 +259,7 @@ block content
     a = [5,10:
         x,0 -> 0;
         x,y -> x/y;
-    ]
+    ];
 
   p.
     This is a 2-dimensional array with size #{'<5,10>'},
@@ -274,14 +274,14 @@ block content
     of the array size:
 
   pre.
-    s = [#[b ~],5: t,i -> sin(t*i)]
+    s = [#[b ~],5: t,i -> sin(t*i)];
 
   p.
     Alternatively, an infinite array size is assumed when no size is given.
     Mind that only a single infinite dimension is allowed:
 
   pre.
-    s = [t -> sin(t)]
+    s = [t -> sin(t)];
 
   h2 Index patterns and guards
 
@@ -311,7 +311,7 @@ block content
     has every third element equal to 1, and all others equal to 0:
 
   pre.
-    s = [t | t % 3 == 0 -> 1 | 0]
+    s = [t | t % 3 == 0 -> 1 | 0];
 
   p.
     A guarded mapping is only effective for indices matched by
@@ -336,7 +336,7 @@ block content
     dimensions:
 
   pre.
-    a = [t -> [5: i -> sin(t*i)]]
+    a = [t -> [5: i -> sin(t*i)]];
 
   p.
     The array "a" is a 2-dimensional array with size #{'<t, 5>'}.
@@ -367,16 +367,15 @@ block content
     "this":
 
   pre.
-    a :: [~]int;
+    a :: [~]real64;
     a = [0 -> 0; t -> a[t-1] * 0.8];
-
-    b = [0 -> 0; t -> this   * 0.8];
+    b = [0 -> 0; t -> this[t-1] * 0.8];
 
   p.
     Multiple arrays can be mutually recursive:
 
   pre.
-    a :: [~]int;
+    a :: [~]real64;
     a = [0 -> 0; t -> b[t-1] * 0.8];
     b = [t -> a[t] + 1];
 
@@ -397,8 +396,21 @@ block content
     (see #[a(href=ref_grammar('array-concat')) Grammar: array-concat]):
 
   pre.
+    a = [5: i -> i] ++ [10: i -> i^2];
+
+  p.
+    Combined with recursion:
+
+  pre.
     a :: [~]int;
     a = [0; 1] ++ [t -> a[t] * 2];
+
+  p.
+    Or shorter:
+
+  pre.
+    a :: [~]int;
+    a = [0; 1] ++ a*2;
 
   h1: a(name='primitive-values') Primitive values
 
@@ -564,7 +576,7 @@ block content
     a = [t -> sin(t*0.2)];
     b = a * 0.1;
     c = a * [t -> sin(t*0.01)];
-    d = a * [t -> [10: i -> sin(t*0.1/i)]]
+    d = a * [t -> [10: i -> sin(t*0.1/i)]];
 
   h2 Broadcasting in indexing
 
@@ -594,4 +606,4 @@ block content
     a = [
       0 -> 1;
       t -> [10: i -> t + i]
-    ]
+    ];
