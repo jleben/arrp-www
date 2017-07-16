@@ -1,12 +1,12 @@
 
-add_executable (server
+add_executable (arrp-server
     main.cpp
     server.cpp
 )
 
-target_link_libraries (server
+target_link_libraries (arrp-server
     PocoFoundation
     PocoNet
 )
 
-install(TARGETS server DESTINATION server)
+install(TARGETS arrp-server DESTINATION server)
