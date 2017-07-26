@@ -1,4 +1,5 @@
 #include "server.hpp"
+#include "../utils/arguments/arguments.hpp"
 
 #include <thread>
 #include <chrono>
@@ -11,12 +12,21 @@ int main(int argc, char * argv[])
 {
     options().port = 8000;
 
-    if (argc > 1)
-        options().data_path = argv[1];
+    Arguments::Parser parser;
+    parser.add_option("-d", options().data_path);
+    parser.add_option("--logs", options().max_log_count);
+
+    parser.parse(argc, argv);
 
     if (options().data_path.empty())
     {
-        cerr << "Missing option: data path" << endl;
+        cerr << "Missing option: -d (data path)" << endl;
+        return 1;
+    }
+
+    if (options().max_log_count < 0)
+    {
+        cerr << "Invalid option: maximum log count: " << options().max_log_count << endl;
         return 1;
     }
 

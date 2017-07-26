@@ -31,10 +31,27 @@ Poco::Net::HTTPServerParams * Server::params()
     params->setMaxThreads(1);
 }
 
+Request_Handler_Factory::Request_Handler_Factory()
+{
+    d_max_ids = options().max_log_count;
+}
+
 HTTPRequestHandler * Request_Handler_Factory::createRequestHandler
 (const HTTPServerRequest &)
 {
-    return new Play_Handler;
+    lock_guard<mutex> guard(d_mutex);
+
+    int id = d_next_id;
+
+    d_next_id = (d_next_id + 1) % d_max_ids;
+
+    return new Play_Handler(id);
+}
+
+Play_Handler::Play_Handler(int id):
+    d_id(id)
+{
+    d_log_dir = "log/" + to_string(id);
 }
 
 void Play_Handler::handleRequest(HTTPServerRequest &request, HTTPServerResponse &response)
@@ -106,6 +123,17 @@ void Play_Handler::play(HTTPServerRequest & request,
         response.send();
     }
 
+    // Make log dir
+
+    {
+        auto cmd = "mkdir -p " + d_log_dir;
+        int result = system(cmd.c_str());
+        if (result != 0)
+        {
+            throw Error("Failed to create log dir: " + d_log_dir);
+        }
+    }
+
     write_arrp_code(request);
     compile_arrp_code(response);
     compile_cpp_code(response);
@@ -119,6 +147,7 @@ void Play_Handler::write_arrp_code(HTTPServerRequest & request)
     auto & in = request.stream();
 
     ofstream code_file("play.arrp");
+    ofstream code_log_file(d_log_dir + "/play.arrp");
 
     string buffer(1024, 0);
 
@@ -134,6 +163,7 @@ void Play_Handler::write_arrp_code(HTTPServerRequest & request)
             break;
 
         code_file.write(&buffer[0], count);
+        code_log_file.write(&buffer[0], count);
 
         file_size += count;
     }
@@ -145,6 +175,10 @@ void Play_Handler::write_arrp_code(HTTPServerRequest & request)
     if (code_file.fail())
     {
         throw Error("Failed to write code file.");
+    }
+    if (code_log_file.fail())
+    {
+        throw Error("Failed to write code file to log directory.");
     }
 }
 

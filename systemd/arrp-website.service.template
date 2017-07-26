@@ -8,7 +8,7 @@ Group=www-data
 Type=simple
 Restart=always
 RestartSec=1
-ExecStart=${CMAKE_INSTALL_PREFIX}/server/arrp-server ${CMAKE_INSTALL_PREFIX}/arrp
+ExecStart=${CMAKE_INSTALL_PREFIX}/server/arrp-server -d ${CMAKE_INSTALL_PREFIX}/arrp
 WorkingDirectory=${CMAKE_INSTALL_PREFIX}/request
 
 [Install]

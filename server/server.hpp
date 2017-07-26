@@ -6,6 +6,8 @@
 #include <Poco/Net/HTTPRequestHandlerFactory.h>
 
 #include <stdexcept>
+#include <atomic>
+#include <mutex>
 
 namespace Arrp_Web {
 
@@ -16,12 +18,15 @@ using Poco::Net::HTTPServerResponse;
 using Poco::Net::HTTPRequestHandler;
 using Poco::Net::HTTPRequestHandlerFactory;
 using std::string;
+using std::atomic;
+using std::mutex;
 
 class Options
 {
 public:
     int port = 8000;
     string data_path;
+    int max_log_count = 100;
 };
 
 Options & options();
@@ -39,18 +44,33 @@ private:
 
 class Request_Handler_Factory : public HTTPRequestHandlerFactory
 {
+public:
+    Request_Handler_Factory();
+
+private:
     HTTPRequestHandler * createRequestHandler
     (const HTTPServerRequest & request) override;
+
+    mutex d_mutex;
+    int d_max_ids = 10;
+    int d_next_id = 0;
 };
 
 class Play_Handler : public HTTPRequestHandler
 {
+public:
     struct Error : public std::exception
     {
         string msg;
         Error(const string & msg) : msg(msg) {}
         const char * what() const noexcept override { return msg.c_str(); }
     };
+
+    Play_Handler(int id);
+
+private:
+    int d_id = 0;
+    string d_log_dir;
 
     void handleRequest
     (HTTPServerRequest & request,
