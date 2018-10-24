@@ -1,4 +1,6 @@
-FROM alpine:edge as builder
+ARG ALPINE_DIGEST=sha256:13e33149491ce3a81a82207e8f43cd9b51bf1b8998927e57b1c2b53947961522
+
+FROM alpine@${ALPINE_DIGEST} as builder
 RUN apk add cmake make build-base git linux-headers
 
 RUN mkdir -p /opt/build/
@@ -50,7 +52,7 @@ COPY ./pug /opt/build/pug/
 RUN pug /opt/build/pug/pages -O "{base_url: ''}" --out /opt/build/html
 
 
-FROM alpine:edge as website
+FROM alpine@${ALPINE_DIGEST} as website
 RUN apk add build-base nginx
 # Copy Poco
 COPY --from=builder /usr/local/lib/libPoco* /usr/local/lib/
