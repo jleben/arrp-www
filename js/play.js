@@ -14,11 +14,14 @@ triangle = 1 - abs(2 * phase - 1);
 main = triangle`,
 osc:
 `\
-phase(freq) = p = [
+phase(freq) = p where {
+  p :: [~]real64;
+  p = [
     0 -> 0;
     t -> let x = p[t-1] + freq[t] in
-      if x < 1 then x else x - 1
-];
+         if x < 1 then x else x - 1
+  ];
+};
 
 osc(freq) = sin(phase(freq) * 2 * pi)
   where pi = atan(1) * 4;
@@ -28,7 +31,6 @@ main = osc([t -> 0.1 + t/1000]);
 
 ## But constant frequency works as well:
 ## main = osc(0.1);
-
 `,
 wavetable_osc:
 `\
@@ -62,13 +64,15 @@ main = windows(4,2,signal);
 `,
 arg_max:
 `\
-arg_max(x) = y[#y-1,1]
-    where y = [
+arg_max(x) = y[#y-1,1] where {
+    y :: [#x,2]int;
+    y = [
         0 -> [x[0]; 0];
         i -> if x[i] > y[i-1,0]
              then [x[i]; i]
              else y[i-1]
     ];
+};
 
 main = arg_max([3;0;5;9;4;2]);
 `,
@@ -76,14 +80,15 @@ lp:
 `\
 delay(v,a) = [0 -> v; t -> a[t-1]];
 
-lp(a,x) =
+lp(a,x) = y where {
+  y :: [~]real64;
   y = a*x + (1-a)*delay(0,y);
+};
 
-## Test signal: 3 harmonics
-signal = [t -> [3:i -> sin(f(i)*t*2*pi)]]
-   where { pi = atan(1)*4; f(i) = (2*i+1)*0.01; };
+## Test signal
+osc(f) = [t -> sin(f*t*2*pi)] where { pi = atan(1)*4; };
 
-main = lp(0.1, signal);
+main = [3: i -> lp(0.1, osc((2*i+1)*0.01))];
 `
 };
 
