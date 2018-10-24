@@ -1,7 +1,13 @@
 
 server {
-    location ${URL_PREFIX}/css/ { root ${FILE_PREFIX}; }
-    location ${URL_PREFIX}/js/ { root ${FILE_PREFIX}; }
+    root ${FILE_PREFIX};
+
+    location = / {
+        try_files /html/play.html =404;
+    }
+
+    location /css { }
+    location /js { }
     location /play/post {
         proxy_pass http://localhost:8000/play/post;
     }
